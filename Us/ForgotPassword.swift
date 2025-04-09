@@ -1,21 +1,19 @@
 //
-//  ContentView.swift
+//  ForgetPassword.swift
 //  Us
 //
-//  Created by Maëva SANCIO on 26/02/2025.
+//  Created by Maëva SANCIO on 27/02/2025.
 //
 
 import SwiftUI
 
-let lightGreyColor = Color(red: 239/255, green: 240/255, blue: 241/255)
+let storedVerifyMail = "azerty@azerty.fr"
+let storedVerifyPhone = "0612345678"
 
-let storedMail = "Maeve"
-let storedPassword = "Azerty"
-
-struct ContentView: View {
+struct ForgotPassword: View {
     
-    @State var mail: String = ""
-    @State var password: String = ""
+    @State var verifymail: String = ""
+    @State var verifyphone: String = ""
     
     @State var authenticationFail: Bool = false
     @State var authenticationSucceed: Bool = false
@@ -24,12 +22,9 @@ struct ContentView: View {
         NavigationView {
             ZStack {
                 VStack {
-                    HelloText()
-                    MailTextField(mail: $mail)
-                    PasswordSecureField(password: $password)
-                    NavigationLink("Mot de passe oublié ?", destination: ForgotPassword())
-                            .font(.caption)
-                            .fontWeight(.light)
+                    ForgotText()
+                    VerifyMailTextField(verifymail: $verifymail)
+                    VerifyPhoneTextField(verifyphone: $verifyphone)
                                                 
                     if authenticationFail{
                         Text("Information incorrecte.")
@@ -38,7 +33,7 @@ struct ContentView: View {
                     }
                     
                     Button(action: {
-                        if self.mail == storedMail && self.password == storedPassword {
+                        if self.verifymail == storedVerifyMail && self.verifyphone == storedVerifyPhone {
                             self.authenticationSucceed = true
                             self.authenticationFail = false
                         } else {
@@ -46,42 +41,35 @@ struct ContentView: View {
                             self.authenticationSucceed = false
                         }
                     }) {
-                        LoginButtonContent()
+                        VerifyButtonContent()
                     }
-                    NavigationLink("Créer un nouveau compte", destination: SignUpView())
-                            .font(.caption)
-                            .fontWeight(.light)
                 }
                 .padding()
-                if authenticationSucceed{
-                    NavigationView{HomeView()}
                 }
             }
         }
-        .navigationBarHidden(true)
     }
-}
 
 #Preview {
-    ContentView()
+    ForgotPassword()
 }
 
-struct HelloText: View {
+struct ForgotText: View {
     var body: some View {
-        Text("Bienvenue!")
+        Text("Mot de Passe oublié ?")
             .font(.largeTitle)
             .fontWeight(.semibold)
             .padding(.bottom, 20)
-        Text("La solidarité commence ici. Connectez-vous!")
+        Text("Vérifiez votre email et votre numéro de téléphone")
             .font(.caption)
             .fontWeight(.light)
             .padding(.bottom, 80)
     }
 }
 
-struct LoginButtonContent: View {
+struct VerifyButtonContent: View {
     var body: some View {
-        Text("Connexion")
+        Text("Vérifier")
             .font(.headline)
             .foregroundColor(.white)
             .padding()
@@ -92,12 +80,12 @@ struct LoginButtonContent: View {
     }
 }
 
-struct MailTextField: View {
+struct VerifyMailTextField: View {
     
-    @Binding var mail: String
+    @Binding var verifymail: String
     
     var body: some View {
-        TextField(("Email"), text: $mail)
+        TextField(("Email"), text: $verifymail)
             .padding()
             .background(lightGreyColor)
             .cornerRadius(5.0)
@@ -105,12 +93,12 @@ struct MailTextField: View {
     }
 }
 
-struct PasswordSecureField: View {
+struct VerifyPhoneTextField: View {
     
-    @Binding var password: String
+    @Binding var verifyphone: String
     
     var body: some View {
-        SecureField(("Mot de passe"), text: $password)
+        TextField(("Téléphone"), text: $verifyphone)
             .padding()
             .background(lightGreyColor)
             .cornerRadius(5.0)
