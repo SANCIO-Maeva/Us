@@ -9,95 +9,103 @@ import SwiftUI
 struct AnnonceDetailView: View {
     let annonce: Announcement
     let isMyAnnonce: Bool
+    
     @State private var isEditing2 = false
     @State private var showAlert = false
     @State private var isMessageViewPresented = false
     
-    // Ajouter un état pour les nouvelles valeurs
     @State private var newTitle = ""
     @State private var newDescription = ""
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 20) {
-            Text(annonce.title)
-                .font(.title)
-                .bold()
-                .padding(.top)
-
-            Text(annonce.description)
-                .font(.body)
-                .foregroundColor(.gray)
-
-            Spacer()
-
-            if isMyAnnonce {
-                Button(action: {
-                    newTitle = annonce.title
-                    newDescription = annonce.description
-                    isEditing2.toggle()
-                }) {
-                    Text("Modifier l'annonce")
-                        .frame(maxWidth: .infinity)
-                        .padding()
-                        .foregroundColor(.white)
-                        .background(LinearGradient(gradient: Gradient(colors: [Color.blue, Color.purple]), startPoint: .leading, endPoint: .trailing))
-                        .cornerRadius(12)
-                        .shadow(radius: 5)
-                        .padding(.horizontal, 20)
+        VStack {
+            ScrollView {
+                VStack(alignment: .leading, spacing: 20) {
+                    
+                    // Titre
+                    Text("Titre de l'annonce")
+                        .font(.headline)
+                        .foregroundColor(Color("SkyBlue"))
+                    
+                    Text(annonce.title)
+                        .font(.title2)
+                        .bold()
+                        .foregroundColor(Color("Peach"))
+                    
+                    Divider()
+                    
+                    // Description
+                    Text("Description")
+                        .font(.headline)
+                        .foregroundColor(Color("SkyBlue"))
+                    
+                    Text(annonce.description)
+                        .font(.body)
+                        .foregroundColor(.gray)
+                    
+                    Spacer(minLength: 100)
                 }
-
-                Button("Supprimer l'annonce") {
-                    showAlert = true
-                }
-                .frame(maxWidth: .infinity)
                 .padding()
-                .tint(.red)
-            } else {
-                Button("Envoyer un message") {
-                    isMessageViewPresented.toggle()
-                }
-                .frame(maxWidth: .infinity)
-                .padding()
-                .foregroundColor(.white)
-                .background(LinearGradient(gradient: Gradient(colors: [Color.blue, Color.green]), startPoint: .leading, endPoint: .trailing))
-                .cornerRadius(12)
-                .shadow(radius: 5)
-                .padding(.horizontal, 20)
             }
+
+            // Boutons fixés en bas
+            VStack(spacing: 12) {
+                if isMyAnnonce {
+                    GradientButton(
+                        title: "Modifier l'annonce",
+                        colors: [Color(.cyan), Color(.mint)]
+                    ) {
+                        newTitle = annonce.title
+                        newDescription = annonce.description
+                        isEditing2.toggle()
+                    }
+                    
+                    Button("Supprimer l'annonce") {
+                        showAlert = true
+                    }
+                    .frame(maxWidth: .infinity)
+                    .padding()
+                    .foregroundColor(.red)
+                    .cornerRadius(12)
+                    .shadow(radius: 5)
+                } else {
+                    GradientButton(
+                        title: "Envoyer un message",
+                        colors: [Color(.mint), Color("Peach")]
+                    ) {
+                        isMessageViewPresented.toggle()
+                    }
+                }
+            }
+            .padding()
+            .background(Color.white.ignoresSafeArea(edges: .bottom))
         }
-        .padding()
+        .background(Color(.systemGray6).opacity(0.2))
         .navigationTitle("Détail de l'annonce")
+        .navigationBarTitleDisplayMode(.inline)
         .alert("Êtes-vous sûr de vouloir supprimer cette annonce ?", isPresented: $showAlert) {
             Button("Annuler", role: .cancel) {}
             Button("Supprimer", role: .destructive) {
                 deleteAnnounce(id_announcement: annonce.id) { success, message in
-                    if success {
-                        print("Annonce supprimée avec succès")
-                    } else {
-                        print("Erreur de suppression: \(message ?? "Erreur inconnue")")
-                    }
+                    print(success ? "Annonce supprimée" : "Erreur : \(message ?? "Erreur inconnue")")
                 }
             }
         }
         .sheet(isPresented: $isEditing2) {
-            EditAnnonceView(title: $newTitle,
-                            description: $newDescription,
-                            isPaid: .constant(true),
-                            amount: .constant(""),
-                            onSave: {
-                                // Appel à updateAnnounce lors de la sauvegarde
-                                updateAnnounce(id_announcement: annonce.id, title: newTitle, description: newDescription) { success, message in
-                                    if success {
-                                        print("Annonce mise à jour avec succès")
-                                    } else {
-                                        print("Erreur lors de la mise à jour: \(message ?? "Erreur inconnue")")
-                                    }
-                                }
-                            })
+            EditAnnonceView(
+                title: $newTitle,
+                description: $newDescription,
+                isPaid: .constant(true),
+                amount: .constant(""),
+                onSave: {
+                    updateAnnounce(id_announcement: annonce.id, title: newTitle, description: newDescription) { success, message in
+                        print(success ? "Annonce mise à jour" : "Erreur : \(message ?? "Erreur inconnue")")
+                    }
+                }
+            )
         }
         .sheet(isPresented: $isMessageViewPresented) {
-            MessageView(recipientId: annonce.userId,
-                        announcementId: annonce.id)
+            MessageView(recipientId: annonce.userId, announcementId: annonce.id)
         }
     }
 }
@@ -156,6 +164,7 @@ struct MessageView: View {
     let announcementId: Int
 
     @State private var message: String = ""
+    @State private var conversationId: Int? = 0
     @State private var userIdSender : Int = 0
     @Environment(\.presentationMode) var presentationMode
     
@@ -188,6 +197,7 @@ struct MessageView: View {
                         userIdSender: userIdSender,
                         userIdReceiver: recipientId,
                         announcementId: announcementId,
+                        conversationId: conversationId!,
                         timestamp: Date(),
                         completion: { success, error in
                             if success {
@@ -225,6 +235,25 @@ struct MessageView: View {
     }
 }
 
-//#Preview {
-//    AnnonceDetailView()
-//}
+struct GradientButton: View {
+    var title: String
+    var colors: [Color]
+    var action: () -> Void
+    
+    var body: some View {
+        Button(action: action) {
+            Text(title)
+                .frame(maxWidth: .infinity)
+                .padding()
+                .foregroundColor(.white)
+                .background(
+                    LinearGradient(gradient: Gradient(colors: colors),
+                                   startPoint: .leading,
+                                   endPoint: .trailing)
+                )
+                .cornerRadius(12)
+                .shadow(radius: 5)
+        }
+    }
+}
+

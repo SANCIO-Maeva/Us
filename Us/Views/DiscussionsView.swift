@@ -7,129 +7,194 @@
 
 import SwiftUI
 
-
 struct DiscussionsView: View {
-    let conversations: [Conversation] = [
-        Conversation(name: "Alice", lastMessage: "Salut, comment ça va ?", time: "12:30"),
-        Conversation(name: "Bob", lastMessage: "On se voit demain ?", time: "11:45"),
-        Conversation(name: "Charlie", lastMessage: "Merci pour hier !", time: "10:15")
-    ]
+    @State private var allConversations: [Conversation] = []
+    @State private var userId: Int = 0
     
-    var body: some View {
-        NavigationView {
-            VStack {
-                List(conversations) { conversation in
-                    NavigationLink(destination: ChatView(conversation: conversation)) {
-                        ConversationRow(conversation: conversation)
-                    }
-                }
-                .listStyle(PlainListStyle())
-            }
-            .navigationTitle("Messagerie")
-            .toolbar {
-                ToolbarItem(placement: .bottomBar) {
-                    ToolBarView()
-                }
+    private func loadUserProfile() {
+        if let user = UserDefaults.standard.user(forKey: "User") {
+            self.userId = user.id
+            fetchConversations(userId: user.id)
+        } else {
+            print("Aucun utilisateur connecté")
+        }
+    }
+    
+    private func fetchConversations(userId: Int) {
+        getConversation(userId: userId) { success, allConversations, errorMessage in
+            if success, let allConversations = allConversations {
+                self.allConversations = allConversations
+            } else {
+                print(errorMessage ?? "Erreur inconnue")
             }
         }
     }
+    
+    var body: some View {
+        ZStack(alignment: .bottom) {
+            ScrollView(.vertical, showsIndicators: false) {
+                VStack(alignment: .leading, spacing: 20) {
+                    Text("Messagerie")
+                        .font(.title)
+                        .fontWeight(.bold)
+                        .padding(.horizontal)
+                        .foregroundColor(Color("Font"))
+                    
+                    ForEach(allConversations) { conversation in
+                        NavigationLink(destination: ChatView(userId: userId, conversation: conversation)) {
+                            ConversationRow(conversation: conversation)
+                                .background(Color.white)
+                                .cornerRadius(15)
+                                .shadow(color: .gray.opacity(0.1), radius: 3, x: 0, y: 2)
+                                .padding(.horizontal)
+                        }
+                    }
+                }
+                .padding(.vertical)
+            }
+            .background(Color(red: 0.98, green: 0.98, blue: 1.0).ignoresSafeArea())
+            ToolBarView()
+        }
+        .onAppear {
+            loadUserProfile()
+        }
+        .edgesIgnoringSafeArea(.bottom)
+        
+    }
 }
+
+
 
 struct ConversationRow: View {
     let conversation: Conversation
     
     var body: some View {
-        HStack {
+        HStack(spacing: 12) {
             Circle()
-                .fill(Color.blue)
+                .fill(Color.mint)
                 .frame(width: 50, height: 50)
-                .overlay(Text(conversation.name.prefix(1)).foregroundColor(.white))
+                .overlay(Text(conversation.user1.name.prefix(1)).foregroundColor(.white))
             
-            VStack(alignment: .leading) {
-                Text(conversation.name)
+            VStack(alignment: .leading, spacing: 4) {
+                Text(conversation.user1.name)
                     .font(.headline)
-                Text(conversation.lastMessage)
+                Text(conversation.lastMessage.content.prefix(20))
                     .font(.subheadline)
                     .foregroundColor(.gray)
             }
             Spacer()
-            Text(conversation.time)
-                .font(.subheadline)
+            Text(conversation.updatedAt)
+                .font(.footnote)
                 .foregroundColor(.gray)
         }
-        .padding(8)
+        .padding(10)
     }
 }
 
 struct ChatView: View {
+    let userId: Int
     let conversation: Conversation
-    let messages: [Message] = [
-        Message(sender: "Alice", text: "Salut, comment ça va ?", isCurrentUser: false),
-        Message(sender: "Moi", text: "Ça va bien et toi ?", isCurrentUser: true),
-        Message(sender: "Alice", text: "Super, merci !", isCurrentUser: false)
-    ]
+    @State private var messages: [Msg] = []
+    
+    private func fetchMessages() {
+        getMessages(userId1: userId, userId2: conversation.user1.id_user) { success, allMessages, errorMessage in
+            if success, let allMessages = allMessages {
+                self.messages = allMessages
+            } else {
+                print(errorMessage ?? "Erreur inconnue")
+            }
+        }
+    }
     
     var body: some View {
-        VStack {
+        VStack(spacing: 0) {
             ScrollView {
-                VStack(spacing: 15) {
+                VStack(spacing: 10) {
                     ForEach(messages) { message in
-                        MessageBubble(message: message)
+                        MessageBubble(message: message, isSent: message.userIdSender == userId)
                     }
                 }
                 .padding()
             }
             
-            Spacer()
+            Divider()
             
-            MessageInputView()
+            MessageInputView(userIdSender: userId, recipientId: conversation.user1.id_user, announcementId: conversation.announcementId , conversationId: conversation.id_conversation)
                 .padding()
+                .background(Color(.systemGray6))
         }
-        .navigationTitle(conversation.name)
+        .background(Color(red: 0.98, green: 0.98, blue: 1.0).ignoresSafeArea())
+        .navigationTitle(conversation.user1.firstname)
+        .onAppear {
+            fetchMessages()
+        }
     }
 }
 
 struct MessageBubble: View {
-    let message: Message
+    let message: Msg
+    let isSent: Bool
     
     var body: some View {
         HStack {
-            if message.isCurrentUser { Spacer() }
+            if isSent { Spacer() }
             
-            Text(message.text)
+            Text(message.content)
                 .padding()
-                .background(message.isCurrentUser ? Color.blue : Color.gray.opacity(0.3))
-                .foregroundColor(message.isCurrentUser ? .white : .black)
-                .clipShape(RoundedRectangle(cornerRadius: 15))
-                
-            if !message.isCurrentUser { Spacer() }
+                .background(isSent ? Color(red: 0.6, green: 0.8, blue: 1.0) : Color(red: 0.95, green: 0.95, blue: 0.95))
+                .foregroundColor(.black)
+                .clipShape(RoundedRectangle(cornerRadius: 20))
+                .frame(maxWidth: 250, alignment: isSent ? .trailing : .leading)
+            
+            if !isSent { Spacer() }
         }
+        .padding(.horizontal)
     }
 }
 
 struct MessageInputView: View {
     @State private var messageText = ""
+    let userIdSender: Int
+    let recipientId: Int
+    let announcementId: Int
+    let conversationId: Int
     
     var body: some View {
-        HStack {
+        HStack(spacing: 10) {
             TextField("Écrire un message...", text: $messageText)
-                .textFieldStyle(RoundedBorderTextFieldStyle())
-                .padding(8)
+                .padding(12)
+                .background(Color.white)
+                .cornerRadius(20)
+                .shadow(color: .gray.opacity(0.2), radius: 4, x: 0, y: 2)
             
             Button(action: {
-                // Action pour envoyer le message
+                guard !messageText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else { return }
+                
+                sendMessage(
+                    id_message: Int.init(),
+                    content: messageText,
+                    userIdSender: userIdSender,
+                    userIdReceiver: recipientId,
+                    announcementId: announcementId,
+                    conversationId: conversationId,
+                    timestamp: Date(),
+                    completion: { success, error in
+                        if success {
+                            print("Message envoyé")
+                            messageText = ""
+                        } else {
+                            print("Erreur: \(error ?? "Erreur inconnue")")
+                        }
+                    }
+                )
             }) {
                 Image(systemName: "paperplane.fill")
-                    .foregroundColor(.blue)
-                    .padding()
+                    .foregroundColor(.white)
+                    .padding(10)
+                    .background(Color.mint)
+                    .clipShape(Circle())
             }
+            .disabled(messageText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
         }
-        .background(Color.white)
-        .clipShape(RoundedRectangle(cornerRadius: 15))
-        .shadow(radius: 3)
     }
-}
-
-#Preview {
-    DiscussionsView()
 }

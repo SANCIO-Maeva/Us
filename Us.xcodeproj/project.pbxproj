@@ -398,14 +398,27 @@
 				DEVELOPMENT_ASSET_PATHS = "\"Us/Preview Content\"";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UIStatusBarStyle = "";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
+				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/gestion/node_modules/@rollup/rollup-darwin-arm64",
+					"$(PROJECT_DIR)/gestion/node_modules/.prisma/client",
+					"$(PROJECT_DIR)/gestion/node_modules/prisma",
+					"$(PROJECT_DIR)/gestion/node_modules/@prisma/engines",
+					"$(PROJECT_DIR)/Us/gestion/node_modules/prisma",
+					"$(PROJECT_DIR)/Us/gestion/node_modules/@prisma/engines",
+					"$(PROJECT_DIR)/Us/gestion/node_modules/.prisma/client",
+					"$(PROJECT_DIR)/Us/gestion/node_modules/@rollup/rollup-darwin-arm64",
 				);
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = projetFilRouge.Us;
@@ -426,14 +439,27 @@
 				DEVELOPMENT_ASSET_PATHS = "\"Us/Preview Content\"";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UIStatusBarStyle = "";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
+				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/gestion/node_modules/@rollup/rollup-darwin-arm64",
+					"$(PROJECT_DIR)/gestion/node_modules/.prisma/client",
+					"$(PROJECT_DIR)/gestion/node_modules/prisma",
+					"$(PROJECT_DIR)/gestion/node_modules/@prisma/engines",
+					"$(PROJECT_DIR)/Us/gestion/node_modules/prisma",
+					"$(PROJECT_DIR)/Us/gestion/node_modules/@prisma/engines",
+					"$(PROJECT_DIR)/Us/gestion/node_modules/.prisma/client",
+					"$(PROJECT_DIR)/Us/gestion/node_modules/@rollup/rollup-darwin-arm64",
 				);
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = projetFilRouge.Us;

@@ -63,9 +63,6 @@ struct ContentView: View {
     }
 }
 
-#Preview {
-    ContentView()
-}
 
 struct HelloText: View {
     var body: some View {

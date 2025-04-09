@@ -25,16 +25,17 @@ func getConversation(userId: Int, completion: @escaping (Bool, [Conversation]?, 
 
         // Afficher les données JSON reçues pour vérification
         if let jsonString = String(data: data, encoding: .utf8) {
-            print("Données JSON reçues: \(jsonString)")
+//            print("Données JSON reçues: \(jsonString)")
         }
 
         let decoder = JSONDecoder()
 
         do {
-            let allMessages = try decoder.decode([Conversation].self, from: data)
-            completion(true, allMessages, nil)
-        } catch {
-            completion(false, nil, "Erreur de décodage JSON: \(error.localizedDescription)")
+            let allConversations = try decoder.decode([Conversation].self, from: data)
+            completion(true, allConversations, nil)
+        } catch let decodingError {
+            print("Erreur de décodage JSON : \(decodingError)")
+            completion(false, nil, "Erreur de décodage JSON: \(decodingError.localizedDescription)")
         }
     }
     task.resume()

@@ -32,10 +32,12 @@ struct AnnouncementsView: View {
             VStack {
                 ScrollView {
                     VStack(alignment: .leading, spacing: 20) {
+                        Spacer()
                         Text("Créer une annonce")
                             .font(.title)
-                            .bold()
+                            .fontWeight(.bold)
                             .padding(.horizontal)
+                            .foregroundColor(Color("Font"))
                         
                         AnnonceTitleView(title: $title)
                         TextEditorView(description: $description)
@@ -46,7 +48,7 @@ struct AnnouncementsView: View {
                 
                 VStack {
                     Button(action: {
-                        showConfirmation = true  // Afficher la popup avant de publier
+                        showConfirmation = true
                     }) {
                         SubmitButtonContent()
                     }
@@ -87,7 +89,9 @@ struct AnnouncementsView: View {
                     
                     ToolBarView()
                 }
-                .background(Color(.systemGray6))
+                .background(Color(.systemGray6).opacity(0.1))
+                .clipShape(RoundedRectangle(cornerRadius: 25))
+                .shadow(color: Color.black.opacity(0.1), radius: 8, x: 0, y: 4)
             }
             .edgesIgnoringSafeArea(.bottom)
             .onAppear {
@@ -102,18 +106,16 @@ struct AnnouncementsView: View {
     }
 }
 
-#Preview {
-    AnnouncementsView()
-}
 struct SubmitButtonContent: View {
     var body: some View {
         Text("Publier l'annonce")
             .frame(maxWidth: .infinity)
             .padding()
             .foregroundColor(.white)
-            .background(LinearGradient(gradient: Gradient(colors: [Color.blue, Color.purple]), startPoint: .leading, endPoint: .trailing))
+            .background(LinearGradient(gradient: Gradient(colors: [Color("Peach"), Color("MintGreen")]), startPoint: .leading, endPoint: .trailing))
             .cornerRadius(12)
             .shadow(radius: 5)
+            .padding(.horizontal)
     }
 }
 
@@ -122,8 +124,9 @@ struct AnnonceTitleView: View {
     var body: some View {
         TextField("Titre de l'annonce", text: $title)
             .padding()
-            .background(Color(.systemGray6))
+            .background(Color.white.opacity(0.8))
             .cornerRadius(10)
+            .shadow(color: Color.black.opacity(0.2), radius: 5, x: 0, y: 3)
     }
 }
 
@@ -131,13 +134,15 @@ struct TextEditorView: View {
     @Binding var description: String
     var body: some View {
         Text("Ajouter une annonce:")
+            .font(.headline)
             .padding(.top)
         
         TextEditor(text: $description)
             .frame(height: 150)
             .padding()
-            .background(Color(.systemGray6))
+            .background(Color.white.opacity(0.8))
             .cornerRadius(10)
+            .shadow(color: Color.black.opacity(0.2), radius: 5, x: 0, y: 3)
     }
 }
 
@@ -152,10 +157,10 @@ struct PhotoSelectionView: View {
                     Image(systemName: "photo.on.rectangle")
                     Text("Ajouter des photos (\(selectedImages.count)/5)")
                 }
+                .padding()
+                .background(Color("SkyBlue").opacity(0.2))
+                .cornerRadius(10)
             }
-            .padding()
-            .background(Color.blue.opacity(0.2))
-            .cornerRadius(10)
             
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack {

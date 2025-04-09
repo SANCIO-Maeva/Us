@@ -67,14 +67,11 @@ struct ProfileView: View {
             Spacer()
             
             VStack(spacing: 15) {
-                Button(action: { isEditing.toggle() }) {
-                    Text("Modifier le profil")
-                        .frame(maxWidth: .infinity)
-                        .padding()
-                        .foregroundColor(.white)
-                        .background(LinearGradient(gradient: Gradient(colors: [Color.blue, Color.purple]), startPoint: .leading, endPoint: .trailing))
-                        .cornerRadius(12)
-                        .shadow(radius: 5)
+                GradientButton(
+                    title: "Modifier l'annonce",
+                    colors: [Color(.cyan), Color(.mint)]
+                ){
+                    isEditing.toggle()
                 }
                 Button(action: logout) {
                     Text("Se déconnecter")
@@ -148,6 +145,3 @@ struct EditProfileView: View {
     }
 }
 
-#Preview {
-    ProfileView()
-}
