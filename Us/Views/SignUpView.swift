@@ -9,20 +9,21 @@ import SwiftUI
 
 struct SignUpView: View {
     
-    @State private var name: String = ""
-    @State private var firstname: String = ""
-    @State private var address: String = ""
-    @State private var phone: String = ""
-    @State private var mail: String = ""
-    @State private var password: String = ""
-    @State private var postalCode: String = ""
-    @State private var bio: String = ""
+    @State private var name: String = "Kipling"
+    @State private var firstname: String = "Hiboux"
+    @State private var address: String = "40 rue des terres au curé"
+    @State private var phone: String = "0689898989"
+    @State private var mail: String = "hiboux@gmail.com"
+    @State private var password: String = "Hiboux123!"
+    @State private var postalCode: String = "75013"
+    @State private var bio: String = "je suis un oiseaux de nuit qui sait tout faire"
     private var latitude: String = ""
     private var longitude: String = ""
     private var id_user: Int? = 0
     @State private var authenticationFail: Bool = false
     @State private var authenticationSucceed: Bool = false
     @State private var errorMessage: String? = nil
+    @State private var navigateToContent = false
     
     var body: some View {
         ZStack {
@@ -108,6 +109,10 @@ struct SignUpView: View {
                     }
                     .padding(.horizontal, 10)
                     .padding(.top, 10)
+                    
+                    NavigationLink(destination: ContentView(), isActive: $navigateToContent) {
+                        EmptyView()
+                    }
 
                     NavigationLink("J'ai déjà un compte", destination: ContentView())
                         .font(.footnote)
@@ -118,6 +123,15 @@ struct SignUpView: View {
             }
         }
         .navigationBarHidden(true)
+        .alert(isPresented: $authenticationSucceed) {
+            Alert(
+                title: Text("Inscription réussie 🎉"),
+                message: Text("Votre profil a bien été créé !"),
+                dismissButton: .default(Text("OK"), action: {
+                    navigateToContent = true
+                })
+            )
+        }
     }
 }
 
@@ -148,4 +162,3 @@ struct SecureCustomField: View {
             .shadow(color: Color.black.opacity(0.2), radius: 5, x: 0, y: 3)
     }
 }
-

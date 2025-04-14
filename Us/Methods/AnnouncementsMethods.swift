@@ -17,6 +17,7 @@ func createAnnouncement(
     userId: Int,
     createdAt: Date,
     updatedAt: Date,
+    categoryId: Int,
     completion: @escaping (Bool, String?) -> Void
 ) {
     guard let url = URL(string: "http://localhost:3000/v1/announcements") else {
@@ -32,7 +33,8 @@ func createAnnouncement(
             image: image,
             userId: userId,
             createdAt: currentDate.ISO8601Format(),
-            updatedAt: currentDate.ISO8601Format()
+            updatedAt: currentDate.ISO8601Format(),
+            categoryId: categoryId,
         )
     
     guard let httpBody = try? JSONEncoder().encode(announcement) else {
@@ -118,6 +120,40 @@ func getAnnounceById(userId: Int, completion: @escaping (Bool, [Announcement]?, 
     task.resume()
 }
 
+func getAnnounceByCategoryId(categoryId: Int, completion: @escaping (Bool, [Announcement]?, String?) -> Void) {
+    guard let url = URL(string: "http://localhost:3000/v1/announcements/category/\(categoryId)") else {
+        completion(false, nil, "URL invalide")
+        return
+    }
+
+    let task = URLSession.shared.dataTask(with: url) { data, response, error in
+        if let error = error {
+            completion(false, nil, "Erreur de réseau: \(error.localizedDescription)")
+            return
+        }
+        guard let data = data else {
+            completion(false, nil, "Aucune donnée reçue")
+            return
+        }
+
+        // Afficher les données JSON reçues pour vérification
+        if let jsonString = String(data: data, encoding: .utf8) {
+//            print("Données JSON reçues: \(jsonString)")
+        }
+
+        let decoder = JSONDecoder()
+
+        do {
+            let AnnouncementCategory = try decoder.decode([Announcement].self, from: data)
+            completion(true, AnnouncementCategory, nil)
+        } catch {
+            completion(false, nil, "Erreur de décodage JSON: \(error.localizedDescription)")
+        }
+    }
+    task.resume()
+}
+
+
 func getAnnounce(completion: @escaping (Bool, [Announcement]?, String?) -> Void) {
     guard let url = URL(string: "http://localhost:3000/v1/announcements/") else {
         completion(false, nil, "URL invalide")
@@ -178,7 +214,7 @@ func deleteAnnounce(id_announcement: Int, completion: @escaping (Bool, String?) 
         }
     }
     
-    task.resume() // N'oublie pas de démarrer la tâche !
+    task.resume()
 }
 
 func updateAnnounce(id_announcement: Int, title: String?, description: String?, completion: @escaping (Bool, String?) -> Void) {

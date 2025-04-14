@@ -8,52 +8,53 @@
 import Foundation
 import SwiftUI
 
+let currentDate = Date()
+
 // MARK: - User Actions
 
-func updatePassword(id: Int, newPassword: String, completion: @escaping (Result<Void, Error>) -> Void) {
+func updatePassword(id: Int, password: String, completion: @escaping (Bool, String?) -> Void) {
     // Remplacer par l'URL de votre serveur réel
     guard let url = URL(string: "http://localhost:3000/v1/users/\(id)") else {
-        completion(.failure(NSError(domain: "", code: 400, userInfo: [NSLocalizedDescriptionKey: "URL invalide"])))
+        completion(false, "URL invalide")
         return
     }
+    
+    var request = URLRequest(url: url)
+    request.httpMethod = "PUT"
+    request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+
 
     // Créer un dictionnaire avec uniquement le mot de passe à mettre à jour
-    let parameters: [String: Any] = ["password": newPassword]
-
+    let parameters: [String: Any] = ["password": password]
+    
     // Convertir les paramètres en JSON
     do {
         let jsonData = try JSONSerialization.data(withJSONObject: parameters, options: [])
-
-        var request = URLRequest(url: url)
-        request.httpMethod = "PUT"  // Méthode PUT pour mettre à jour
-        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.httpBody = jsonData  // Ajouter les données dans le corps de la requête
-
-        // Utiliser URLSession pour envoyer la requête asynchrone
-        let task = URLSession.shared.dataTask(with: request) { data, response, error in
-            if let error = error {
-                // Si une erreur se produit lors de la requête
-                completion(.failure(error))
-                return
-            }
-
-            // Vérifier que le serveur a retourné une réponse valide
-            if let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 {
-                // Succès
-                completion(.success(()))
-            } else {
-                // Si le serveur retourne un code d'état différent de 200 (succès)
-                let errorMessage = "Erreur lors de la mise à jour du mot de passe."
-                completion(.failure(NSError(domain: "", code: 500, userInfo: [NSLocalizedDescriptionKey: errorMessage])))
-            }
-        }
-
-        task.resume()  // Démarrer la tâche réseau
-
+        request.httpBody = jsonData
     } catch {
-        // Si l'encodage JSON échoue
-        completion(.failure(error))
+        completion(false, "Erreur lors de la conversion des données en JSON")
+        return
     }
+    // Effectuer la requête HTTP
+    let task = URLSession.shared.dataTask(with: request) { data, response, error in
+        if let error = error {
+            completion(false, "Erreur réseau: \(error.localizedDescription)")
+            return
+        }
+        
+        guard let httpResponse = response as? HTTPURLResponse else {
+            completion(false, "Réponse invalide du serveur")
+            return
+        }
+        
+        if httpResponse.statusCode == 200 {
+            completion(true, nil)
+        } else {
+            completion(false, "Erreur serveur: \(httpResponse.statusCode)")
+        }
+    }
+    
+    task.resume()
 }
 
 

@@ -86,7 +86,7 @@ func sendMessage(
 }
 
 func getMessages(userId1: Int, userId2: Int, completion: @escaping (Bool, [Msg]?, String?) -> Void) {
-    guard let url = URL(string: "http://localhost:3000/v1/messages/discussion/\(userId1)/\(userId2)") else {
+    guard let url = URL(string: "http://localhost:3000/v1/messages/conversation/\(userId1)/\(userId2)") else {
         completion(false, nil, "URL invalide")
         return
     }

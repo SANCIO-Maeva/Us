@@ -10,7 +10,21 @@ import SwiftUI
 struct DiscussionsView: View {
     @State private var allConversations: [Conversation] = []
     @State private var userId: Int = 0
+    @State private var refreshTimer: Timer?
+    @State private var hasNewMessages: Bool = false
+
     
+    private func startAutoRefresh() {
+        refreshTimer = Timer.scheduledTimer(withTimeInterval: 5.0, repeats: true) { _ in
+            fetchConversations(userId: userId)
+        }
+    }
+
+    private func stopAutoRefresh() {
+        refreshTimer?.invalidate()
+        refreshTimer = nil
+    }
+
     private func loadUserProfile() {
         if let user = UserDefaults.standard.user(forKey: "User") {
             self.userId = user.id
@@ -53,7 +67,7 @@ struct DiscussionsView: View {
                 .padding(.vertical)
             }
             .background(Color(red: 0.98, green: 0.98, blue: 1.0).ignoresSafeArea())
-            ToolBarView()
+            ToolBarView(selectedTab: "messages")
         }
         .onAppear {
             loadUserProfile()
@@ -69,7 +83,7 @@ struct ConversationRow: View {
     let conversation: Conversation
     
     var body: some View {
-        HStack(spacing: 12) {
+        HStack(spacing: 8) {
             Circle()
                 .fill(Color.mint)
                 .frame(width: 50, height: 50)
@@ -95,6 +109,18 @@ struct ChatView: View {
     let userId: Int
     let conversation: Conversation
     @State private var messages: [Msg] = []
+    @State private var refreshTimer: Timer?
+
+    func startAutoRefresh() {
+        refreshTimer = Timer.scheduledTimer(withTimeInterval: 5.0, repeats: true) { _ in
+            fetchMessages()
+        }
+    }
+
+    func stopAutoRefresh() {
+        refreshTimer?.invalidate()
+        refreshTimer = nil
+    }
     
     private func fetchMessages() {
         getMessages(userId1: userId, userId2: conversation.user1.id_user) { success, allMessages, errorMessage in
@@ -119,7 +145,15 @@ struct ChatView: View {
             
             Divider()
             
-            MessageInputView(userIdSender: userId, recipientId: conversation.user1.id_user, announcementId: conversation.announcementId , conversationId: conversation.id_conversation)
+            MessageInputView(
+                userIdSender: userId,
+                recipientId: conversation.user1.id_user,
+                announcementId: conversation.announcementId,
+                conversationId: conversation.id_conversation,
+                onSend: {
+                    fetchMessages()  // Refresh après envoi
+                }
+            )
                 .padding()
                 .background(Color(.systemGray6))
         }
@@ -127,6 +161,10 @@ struct ChatView: View {
         .navigationTitle(conversation.user1.firstname)
         .onAppear {
             fetchMessages()
+            startAutoRefresh()
+        }
+        .onDisappear {
+            stopAutoRefresh()
         }
     }
 }
@@ -158,7 +196,9 @@ struct MessageInputView: View {
     let recipientId: Int
     let announcementId: Int
     let conversationId: Int
-    
+
+    var onSend: () -> Void  // ➕ nouveau paramètre
+
     var body: some View {
         HStack(spacing: 10) {
             TextField("Écrire un message...", text: $messageText)
@@ -166,27 +206,26 @@ struct MessageInputView: View {
                 .background(Color.white)
                 .cornerRadius(20)
                 .shadow(color: .gray.opacity(0.2), radius: 4, x: 0, y: 2)
-            
+
             Button(action: {
                 guard !messageText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else { return }
-                
+
                 sendMessage(
-                    id_message: Int.init(),
+                    id_message: Int(),
                     content: messageText,
                     userIdSender: userIdSender,
                     userIdReceiver: recipientId,
                     announcementId: announcementId,
                     conversationId: conversationId,
-                    timestamp: Date(),
-                    completion: { success, error in
-                        if success {
-                            print("Message envoyé")
-                            messageText = ""
-                        } else {
-                            print("Erreur: \(error ?? "Erreur inconnue")")
-                        }
+                    timestamp: Date()
+                ) { success, error in
+                    if success {
+                        messageText = ""
+                        onSend()  // ➕ refresh les messages
+                    } else {
+                        print("Erreur: \(error ?? "Erreur inconnue")")
                     }
-                )
+                }
             }) {
                 Image(systemName: "paperplane.fill")
                     .foregroundColor(.white)

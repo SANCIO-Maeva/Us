@@ -21,6 +21,12 @@ struct User: Codable, Identifiable {
     let phone: String?
 }
 
+struct Category: Codable, Identifiable {
+    var id: Int
+    var id_category: Int
+    var name: String
+}
+
 struct Announcement: Codable, Identifiable {
     var id: Int
     var id_announcement: Int
@@ -30,6 +36,7 @@ struct Announcement: Codable, Identifiable {
     var userId: Int
     var createdAt: String
     var updatedAt: String
+    var categoryId: Int
 }
 
 struct Msg: Codable, Identifiable {
@@ -41,6 +48,7 @@ struct Msg: Codable, Identifiable {
     var announcementId: Int?
     var conversationId: Int
     var timestamp: String
+//    var isRead: Bool
 }
 
 struct Conversation: Codable, Identifiable {
@@ -63,6 +71,7 @@ struct Conversation: Codable, Identifiable {
     struct BasicMessage: Codable {
         var id_message: Int
         var content: String
+//        var isRead: Bool
     }
 
 //    // Pour afficher le bon nom en fonction de l'utilisateur actuel

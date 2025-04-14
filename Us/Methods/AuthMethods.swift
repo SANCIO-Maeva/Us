@@ -7,6 +7,26 @@
 
 import Foundation
 
+// MARK: - UserDefaults Extension for Storing User Data
+
+extension UserDefaults {
+    func user(forKey defaultName: String) -> User? {
+        guard let data = data(forKey: defaultName) else { return nil }
+        do {
+            return try JSONDecoder().decode(User.self, from: data)
+        } catch {
+            print(error)
+            return nil
+        }
+    }
+    
+    func set(_ value: User, forKey defaultName: String) {
+        if let data = try? JSONEncoder().encode(value) {
+            set(data, forKey: defaultName)
+        }
+    }
+}
+
 // MARK: - Authentication Methods
 
 // Authenticates the user and saves user data in UserDefaults

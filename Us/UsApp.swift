@@ -13,5 +13,20 @@ struct UsApp: App {
         WindowGroup {
             ContentView()
         }
+        WindowGroup {
+            HomeView()
+        }
+        WindowGroup {
+            SignUpView()
+        }
+        WindowGroup {
+            ForgotPassword()
+        }
+        WindowGroup {
+            AnnouncementsView()
+        }
+        WindowGroup {
+            DiscussionsView()
+        }
     }
 }

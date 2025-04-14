@@ -14,6 +14,7 @@ struct HomeView: View {
     @State private var isAuthenticated: Bool = false
     @State private var announcements: [Announcement] = []
     @State private var allAnnouncements: [Announcement] = []
+    @State private var AnnouncementCategory: [Announcement] = []
     
     private func loadUserProfile() {
         if let user = UserDefaults.standard.user(forKey: "User") {
@@ -38,6 +39,17 @@ struct HomeView: View {
         }
     }
     
+    private func fetchCategoriesAnnouncements(categoryId: Int) {
+        getAnnounceByCategoryId(categoryId: categoryId) { success, AnnouncementCategory, errorMessage in
+            if success, let AnnouncementCategory = AnnouncementCategory {
+                self.AnnouncementCategory = AnnouncementCategory
+            } else {
+                print(errorMessage ?? "Erreur inconnue")
+            }
+        }
+    }
+
+    
     private func fetchAnnouncements() {
         getAnnounce { success, allAnnouncements, errorMessage in
             if success, let allAnnouncements = allAnnouncements {
@@ -47,7 +59,7 @@ struct HomeView: View {
             }
         }
     }
-    
+        
     private func isUserAnnonce(_ annonce: Announcement) -> Bool {
         guard let user = UserDefaults.standard.user(forKey: "User") else {
             return false
@@ -59,8 +71,8 @@ struct HomeView: View {
         ZStack(alignment: .bottom) {
             VStack {
                 VStack(alignment: .leading, spacing: 20) {
-                    HeaderView(firstname: $firstname, name: $name)
-                    
+                    HeaderView(firstname: $firstname, name: $name, allAnnouncements: AnnouncementCategory)
+
                     if isAuthenticated {
                         HStack {
                             Text("Vos annonces")
@@ -117,7 +129,7 @@ struct HomeView: View {
                 }
             }
             .padding()
-            ToolBarView()
+            ToolBarView(selectedTab: "home")
         }
         .onAppear {
             loadUserProfile()
@@ -221,110 +233,84 @@ struct CardView2: View {
     }
 }
 
+struct ButtonNav: View {
+    let name: String
+    
+    var body: some View {
+        HStack() {
+            Text(name)
+                .font(.footnote)
+                .fontWeight(.medium)
+                .foregroundColor(Color("SkyBlue"))
+                .padding(.horizontal, 14)
+                .padding(.vertical, 12)
+                .overlay(
+                    Capsule()
+                        .stroke(Color("Peach"), lineWidth: 1.5)
+                )
+        }
+    }
+}
+
 struct HeaderView: View {
+    @State private var allCategories: [Category] = []
+    @State private var AnnouncementCategory: [Announcement] = []
+
+
     @Binding var firstname: String
     @Binding var name: String
     
-    var body: some View {
-        HStack {
-            VStack(alignment: .leading) {
-                Text("Bienvenue")
-                    .font(.title2)
-                    .bold()
-                    .foregroundColor(Color("Font"))
-                HStack {
-                    Text(firstname)
-                        .font(.subheadline)
-                        .foregroundColor(.gray)
-                    Text(name)
-                        .font(.subheadline)
-                        .foregroundColor(.gray)
-                }
-            }
-            Spacer()
-            NavigationLink(destination: ProfileView()) {
-                Image(systemName: "person.circle.fill")
-                    .resizable()
-                    .frame(width: 30, height: 30)
-                    .foregroundColor(.gray)
+    let allAnnouncements: [Announcement]
+    
+    private func fetchCategories() {
+        getCategories { success, allCategories, errorMessage in
+            if success, let allCategories = allCategories {
+                self.allCategories = allCategories
+            } else {
+                print(errorMessage ?? "Erreur inconnue")
             }
         }
-        .padding(.bottom)
-        
-        ScrollView(.horizontal, showsIndicators: false) {
-            HStack{
-                Button(action: {
-                    // Action à définir
-                }) {
-                    Text("Voir plus")
-                        .font(.footnote)
-                        .fontWeight(.medium)
-                        .foregroundColor(Color("SkyBlue"))
-                        .padding(.horizontal, 14)
-                        .padding(.vertical, 12)
-                        .overlay(
-                            Capsule()
-                                .stroke(Color("Peach"), lineWidth: 1.5)
-                        )
+    }
+
+    var body: some View {
+        VStack {
+            HStack {
+                VStack(alignment: .leading) {
+                    Text("Bienvenue")
+                        .font(.title2)
+                        .bold()
+                        .foregroundColor(Color("Font"))
+                    HStack {
+                        Text(firstname)
+                            .font(.subheadline)
+                            .foregroundColor(.gray)
+                        Text(name)
+                            .font(.subheadline)
+                            .foregroundColor(.gray)
+                    }
                 }
-                Button(action: {
-                    // Action à définir
-                }) {
-                    Text("Voir plus")
-                        .font(.footnote)
-                        .fontWeight(.medium)
-                        .foregroundColor(Color("SkyBlue"))
-                        .padding(.horizontal, 14)
-                        .padding(.vertical, 12)
-                        .overlay(
-                            Capsule()
-                                .stroke(Color("Peach"), lineWidth: 1.5)
-                        )
+                Spacer()
+                NavigationLink(destination: ProfileView()) {
+                    Image(systemName: "person.circle.fill")
+                        .resizable()
+                        .frame(width: 30, height: 30)
+                        .foregroundColor(.gray)
                 }
-                Button(action: {
-                    // Action à définir
-                }) {
-                    Text("Voir plus")
-                        .font(.footnote)
-                        .fontWeight(.medium)
-                        .foregroundColor(Color("SkyBlue"))
-                        .padding(.horizontal, 14)
-                        .padding(.vertical, 12)
-                        .overlay(
-                            Capsule()
-                                .stroke(Color("Peach"), lineWidth: 1.5)
-                        )
-                }
-                Button(action: {
-                    // Action à définir
-                }) {
-                    Text("Voir plus")
-                        .font(.footnote)
-                        .fontWeight(.medium)
-                        .foregroundColor(Color("SkyBlue"))
-                        .padding(.horizontal, 14)
-                        .padding(.vertical, 12)
-                        .overlay(
-                            Capsule()
-                                .stroke(Color("Peach"), lineWidth: 1.5)
-                        )
-                }
-                Button(action: {
-                    // Action à définir
-                }) {
-                    Text("Voir plus")
-                        .font(.footnote)
-                        .fontWeight(.medium)
-                        .foregroundColor(Color("SkyBlue"))
-                        .padding(.horizontal, 14)
-                        .padding(.vertical, 12)
-                        .overlay(
-                            Capsule()
-                                .stroke(Color("Peach"), lineWidth: 1.5)
-                        )
-                }
-                
             }
+            .padding(.bottom)
+            
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack {
+                    ForEach(allCategories) { category in
+                        NavigationLink(destination: CategoryView(category: category)) {
+                            ButtonNav(name: category.name)
+                        }
+                    }
+                }
+            }
+        }
+        .onAppear {
+            fetchCategories()
         }
     }
 }
@@ -332,8 +318,8 @@ struct HeaderView: View {
 struct ToolBarView: View {
     @Environment(\.colorScheme) var colorScheme
     @Environment(\.dismiss) var dismiss
-    @State private var selectedTab: String = "home"
-    
+    @State var selectedTab: String = ""
+
     var body: some View {
         HStack {
             ToolBarItem(icon: "house.fill", title: "Accueil", color: Color("SkyBlue"), tag: "home", selectedTab: $selectedTab) {
