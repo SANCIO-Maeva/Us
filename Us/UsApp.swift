@@ -20,7 +20,7 @@ struct UsApp: App {
             SignUpView()
         }
         WindowGroup {
-            ForgotPassword()
+            ForgotPasswordView()
         }
         WindowGroup {
             AnnouncementsView()

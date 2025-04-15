@@ -27,7 +27,7 @@ struct ContentView: View {
                     PasswordSecureField(password: $password)
                     HStack{
                         Spacer()
-                        NavigationLink("Mot de passe oublié ?", destination: ForgotPassword())
+                        NavigationLink("Mot de passe oublié ?", destination: ForgotPasswordView())
                             .font(.caption)
                             .fontWeight(.light)
                             .padding(.horizontal)

@@ -1,5 +1,5 @@
 //
-//  ForgetPassword.swift
+//  ForgotPasswordView.swift
 //  Us
 //
 //  Created by Maëva SANCIO on 27/02/2025.
@@ -7,22 +7,18 @@
 
 import SwiftUI
 
-struct ForgotPassword: View {
-    
+struct ForgotPasswordView: View {
     @State private var mail: String = "john.doe@example.com"
     @State private var phone: String = "1234567890"
     
     @State private var authenticationSucceed: Bool = false
     @State private var authenticationFail: Bool = false
-    @State private var showUpdatePassword: Bool = false
     
     var body: some View {
         NavigationStack {
             VStack {
                 ScrollView {
                     VStack(alignment: .leading, spacing: 20) {
-                        
-                        // Titre
                         Text("Mot de Passe oublié ?")
                             .font(.largeTitle)
                             .fontWeight(.bold)
@@ -45,20 +41,19 @@ struct ForgotPassword: View {
                     .padding()
                 }
                 
-                // Boutons fixés en bas
                 VStack(spacing: 12) {
                     GradientButton(
                         title: "Vérifier",
                         colors: [Color(.cyan), Color(.mint)]
                     ) {
-                        Us.authenticateForgotUser(mail: mail, phone: phone) { success, errorMessage  in
+                        Us.authenticateForgotUser(mail: mail, phone: phone) { success, errorMessage in
                             authenticationSucceed = success
                             authenticationFail = !success
                         }
                     }
                     
                     NavigationLink(
-                        destination: UpdatePassword(),
+                        destination: UpdatePassword().navigationBarBackButtonHidden(true),
                         isActive: $authenticationSucceed
                     ) {
                         EmptyView()
@@ -74,14 +69,16 @@ struct ForgotPassword: View {
         }
     }
 }
+
 struct UpdatePassword: View {
-    
-    @State private var password: String = ""
-    @State private var confirmedpassword: String = ""
+    @State private var password: String = "Azerty7513!"
+    @State private var confirmedpassword: String = "Azerty7513!"
     @State private var userId: Int?
+    
     @State private var authenticationFail: Bool = false
     @State private var authenticationSucceed: Bool = false
     @State private var errorMessage: String? = nil
+    @State private var navigateToContent = false
     
     private func loadUserProfile() {
         if let user = UserDefaults.standard.user(forKey: "User") {
@@ -120,7 +117,6 @@ struct UpdatePassword: View {
                     .padding()
                 }
                 
-                // Bouton de validation
                 VStack(spacing: 12) {
                     GradientButton(
                         title: "Valider",
@@ -131,18 +127,26 @@ struct UpdatePassword: View {
                             errorMessage = "Les mots de passe ne sont pas identiques."
                             return
                         }
+                        guard let id = userId else {
+                            authenticationFail = true
+                            errorMessage = "Utilisateur introuvable."
+                            return
+                        }
                         
-                        Us.updatePassword(id: userId!, password: password) { success, message in
+                        Us.updatePassword(id: id, password: password) { success, message in
                             DispatchQueue.main.async {
                                 if success {
                                     authenticationFail = false
-                                    authenticationSucceed = true
+                                    authenticationSucceed = success
                                 } else {
                                     authenticationFail = true
-                                    errorMessage = message 
+                                    errorMessage = message
                                 }
                             }
                         }
+                    }
+                    NavigationLink(destination: ContentView().navigationBarBackButtonHidden(true), isActive: $navigateToContent) {
+                        EmptyView()
                     }
                 }
                 .padding()
@@ -150,18 +154,28 @@ struct UpdatePassword: View {
             }
             .background(Color(.systemGray6).opacity(0.2))
             .navigationBarBackButtonHidden(true)
-            .onAppear {
-                loadUserProfile()
+            .alert(isPresented: $authenticationSucceed) {
+                Alert(
+                    title: Text("Mise à jour réussie 🎉"),
+                    message: Text("Votre mot de passe a bien été modifié !"),
+                    dismissButton: .default(Text("OK"), action: {
+                        navigateToContent = true
+                    })
+                )
             }
+            .onAppear(perform: loadUserProfile)
         }
     }
 }
+
 // MARK: - Sous-vues
 
 struct VerifyMailTextField: View {
     @Binding var mail: String
     var body: some View {
         TextField("Email", text: $mail)
+            .keyboardType(.emailAddress)
+            .autocapitalization(.none)
             .padding()
             .background(RoundedRectangle(cornerRadius: 8).fill(Color(.systemGray6)))
             .padding(.horizontal, 20)
