@@ -47,7 +47,6 @@ struct Msg: Codable, Identifiable {
     var announcementId: Int?
     var conversationId: Int
     var timestamp: String
-//    var isRead: Bool
 }
 
 struct Conversation: Codable, Identifiable {

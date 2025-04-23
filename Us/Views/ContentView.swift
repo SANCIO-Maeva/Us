@@ -10,8 +10,8 @@ import SwiftUI
 
 struct ContentView: View {
     
-    @State private var mail: String = "john.doe@example.com"
-    @State private var password: String = "Azerty7513!"
+    @State private var mail: String = "hiboux@gmail.com"
+    @State private var password: String = "Hiboux123!"
     
     @State private var showAlert = false
     @State private var alertMessage = ""
