@@ -115,8 +115,7 @@ func fetchCoordinates(for address: String, completion: @escaping (Double?, Doubl
 // Creates a new user on the server
 func createUser(
     id_user: Int,
-    name: String,
-    firstname: String,
+    fullname: String,
     address: String,
     phone: String,
     mail: String,
@@ -139,8 +138,7 @@ func createUser(
     
     let user = User(
         id: id_user,
-        name: name,
-        firstname: firstname,
+        fullname: fullname,
         mail: mail,
         password: password,
         role: "Admin",

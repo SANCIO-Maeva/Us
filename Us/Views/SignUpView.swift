@@ -9,8 +9,7 @@ import SwiftUI
 
 struct SignUpView: View {
     
-    @State private var name: String = "Kipling"
-    @State private var firstname: String = "Hiboux"
+    @State private var fullname: String = "Kipling Hiboux"
     @State private var address: String = "40 rue des terres au curé"
     @State private var phone: String = "0689898989"
     @State private var mail: String = "hiboux@gmail.com"
@@ -43,10 +42,7 @@ struct SignUpView: View {
                         .padding(.bottom, 10)
                     
                     Group {
-                        HStack(spacing: 10) {
-                            CustomTextField(placeholder: "Nom", text: $name)
-                            CustomTextField(placeholder: "Prénom", text: $firstname)
-                        }
+                        CustomTextField(placeholder: "Nom et prénom", text: $fullname)
                         CustomTextField(placeholder: "Adresse", text: $address)
                         CustomTextField(placeholder: "Téléphone", text: $phone, keyboard: .numberPad)
                         CustomTextField(placeholder: "Email", text: $mail, keyboard: .emailAddress)
@@ -79,8 +75,7 @@ struct SignUpView: View {
                             
                             createUser(
                                 id_user: id_user!,
-                                name: name,
-                                firstname: firstname,
+                                fullname: fullname,
                                 address: address,
                                 phone: phone,
                                 mail: mail,
@@ -132,33 +127,5 @@ struct SignUpView: View {
                 })
             )
         }
-    }
-}
-
-struct CustomTextField: View {
-    var placeholder: String
-    @Binding var text: String
-    var keyboard: UIKeyboardType = .default
-    
-    var body: some View {
-        TextField(placeholder, text: $text)
-            .keyboardType(keyboard)
-            .padding()
-            .background(Color.white.opacity(0.8))
-            .cornerRadius(10)
-            .shadow(color: Color.black.opacity(0.2), radius: 5, x: 0, y: 3)
-    }
-}
-
-struct SecureCustomField: View {
-    var placeholder: String
-    @Binding var text: String
-    
-    var body: some View {
-        SecureField(placeholder, text: $text)
-            .padding()
-            .background(Color.white.opacity(0.8))
-            .cornerRadius(10)
-            .shadow(color: Color.black.opacity(0.2), radius: 5, x: 0, y: 3)
     }
 }

@@ -77,8 +77,6 @@ struct DiscussionsView: View {
     }
 }
 
-
-
 struct ConversationRow: View {
     let conversation: Conversation
     
@@ -87,10 +85,10 @@ struct ConversationRow: View {
             Circle()
                 .fill(Color.mint)
                 .frame(width: 50, height: 50)
-                .overlay(Text(conversation.user1.name.prefix(1)).foregroundColor(.white))
+                .overlay(Text(conversation.user1.fullname.prefix(1)).foregroundColor(.white))
             
             VStack(alignment: .leading, spacing: 4) {
-                Text(conversation.user1.name)
+                Text(conversation.user1.fullname)
                     .font(.headline)
                 Text(conversation.lastMessage.content.prefix(20))
                     .font(.subheadline)
@@ -158,7 +156,7 @@ struct ChatView: View {
                 .background(Color(.systemGray6))
         }
         .background(Color(red: 0.98, green: 0.98, blue: 1.0).ignoresSafeArea())
-        .navigationTitle(conversation.user1.firstname)
+        .navigationTitle(conversation.user1.fullname)
         .onAppear {
             fetchMessages()
             startAutoRefresh()

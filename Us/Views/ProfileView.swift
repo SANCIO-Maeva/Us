@@ -8,8 +8,7 @@
 import SwiftUI
 
 struct ProfileView: View {
-    @State private var firstname: String = ""
-    @State private var name: String = ""
+    @State private var fullname: String = ""
     @State private var bio: String = ""
     @State private var mail: String = ""
     @State private var phone: String = ""
@@ -19,8 +18,7 @@ struct ProfileView: View {
         if let userData = UserDefaults.standard.data(forKey: "User"),
            let userDict = try? JSONSerialization.jsonObject(with: userData, options: []) as? [String: Any] {
             
-            firstname = userDict["firstname"] as? String ?? ""
-            name = userDict["name"] as? String ?? ""
+            fullname = userDict["fullname"] as? String ?? ""
             bio = userDict["bio"] as? String ?? ""
             mail = userDict["mail"] as? String ?? ""
             phone = userDict["phone"] as? String ?? ""
@@ -37,11 +35,7 @@ struct ProfileView: View {
                     .padding(.top, 30)
                     .shadow(radius: 5)
                 HStack {
-                    Text(firstname)
-                        .font(.title)
-                        .bold()
-                        .foregroundColor(.primary)
-                    Text(name)
+                    Text(fullname)
                         .font(.title)
                         .bold()
                         .foregroundColor(.primary)

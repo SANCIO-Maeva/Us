@@ -29,8 +29,8 @@ struct ForgotPasswordView: View {
                             .fontWeight(.light)
                             .padding(.bottom, 40)
                         
-                        VerifyMailTextField(mail: $mail)
-                        VerifyPhoneTextField(phone: $phone)
+                        CustomTextField(placeholder: "Téléphone", text: $phone, keyboard: .numberPad)
+                        CustomTextField(placeholder: "Email", text: $mail, keyboard: .emailAddress)
                         
                         if authenticationFail {
                             Text("Information incorrecte.")
@@ -98,15 +98,8 @@ struct UpdatePassword: View {
                             .fontWeight(.bold)
                             .foregroundColor(Color("SkyBlue"))
                         
-                        SecureField("Nouveau mot de passe", text: $password)
-                            .padding()
-                            .background(RoundedRectangle(cornerRadius: 8).fill(Color(.systemGray6)))
-                            .padding(.horizontal, 20)
-                        
-                        SecureField("Confirmer le mot de passe", text: $confirmedpassword)
-                            .padding()
-                            .background(RoundedRectangle(cornerRadius: 8).fill(Color(.systemGray6)))
-                            .padding(.horizontal, 20)
+                        SecureCustomField(placeholder: "Nouveau mot de passe", text: $password)
+                        SecureCustomField(placeholder: "Confirmer le mot de passe", text: $confirmedpassword)
                         
                         if authenticationFail {
                             Text(errorMessage ?? "Les mots de passe ne sont pas identiques.")
@@ -165,31 +158,5 @@ struct UpdatePassword: View {
             }
             .onAppear(perform: loadUserProfile)
         }
-    }
-}
-
-// MARK: - Sous-vues
-
-struct VerifyMailTextField: View {
-    @Binding var mail: String
-    var body: some View {
-        TextField("Email", text: $mail)
-            .keyboardType(.emailAddress)
-            .autocapitalization(.none)
-            .padding()
-            .background(RoundedRectangle(cornerRadius: 8).fill(Color(.systemGray6)))
-            .padding(.horizontal, 20)
-    }
-}
-
-struct VerifyPhoneTextField: View {
-    @Binding var phone: String
-    var body: some View {
-        TextField("Téléphone", text: $phone)
-            .keyboardType(.phonePad)
-            .padding()
-            .background(RoundedRectangle(cornerRadius: 8).fill(Color(.systemGray6)))
-            .padding(.horizontal, 20)
-            .padding(.bottom, 30)
     }
 }

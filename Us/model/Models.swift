@@ -8,8 +8,7 @@
 
 struct User: Codable, Identifiable {
     let id: Int
-    let name: String
-    let firstname: String?
+    let fullname: String
     let mail: String
     let password: String?
     let role: String?
@@ -65,8 +64,7 @@ struct Conversation: Codable, Identifiable {
 
     struct BasicUser: Codable {
         var id_user: Int
-        var firstname: String
-        var name: String
+        var fullname: String
     }
     struct BasicMessage: Codable {
         var id_message: Int
@@ -77,7 +75,7 @@ struct Conversation: Codable, Identifiable {
 //    // Pour afficher le bon nom en fonction de l'utilisateur actuel
     func displayName(for currentUserId: Int) -> String {
         return currentUserId == userSender
-            ? "\(user2.firstname) \(user2.name)"
-            : "\(user1.firstname) \(user1.name)"
+            ? "\(user2.fullname)"
+            : "\(user1.fullname)"
     }
 }

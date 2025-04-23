@@ -22,9 +22,16 @@ struct ContentView: View {
         NavigationView {
             ZStack {
                 VStack {
-                    HelloText()
-                    MailTextField(mail: $mail)
-                    PasswordSecureField(password: $password)
+                    Text("Bienvenue!")
+                        .font(.largeTitle)
+                        .fontWeight(.bold)
+                        .padding(.bottom, 20)
+                    Text("La solidarité commence ici. Connectez-vous!")
+                        .font(.caption)
+                        .fontWeight(.light)
+                        .padding(.bottom, 80)
+                    CustomTextField(placeholder: "Email", text: $mail, keyboard: .emailAddress)
+                    SecureCustomField(placeholder: "Mot de passe", text: $password)
                     HStack{
                         Spacer()
                         NavigationLink("Mot de passe oublié ?", destination: ForgotPasswordView())
@@ -63,20 +70,6 @@ struct ContentView: View {
     }
 }
 
-
-struct HelloText: View {
-    var body: some View {
-        Text("Bienvenue!")
-            .font(.largeTitle)
-            .fontWeight(.bold)
-            .padding(.bottom, 20)
-        Text("La solidarité commence ici. Connectez-vous!")
-            .font(.caption)
-            .fontWeight(.light)
-            .padding(.bottom, 80)
-    }
-}
-
 struct LoginButtonContent: View {
     var body: some View {
         Text("Connexion")
@@ -87,30 +80,6 @@ struct LoginButtonContent: View {
             .background(LinearGradient(gradient: Gradient(colors: [Color.blue, Color.purple]), startPoint: .leading, endPoint: .trailing))
             .cornerRadius(12)
             .shadow(radius: 5)
-            .padding(.horizontal, 20)
-    }
-}
-
-struct MailTextField: View {
-    
-    @Binding var mail: String
-    
-    var body: some View {
-        TextField(("Email"), text: $mail)
-            .padding()
-            .background(RoundedRectangle(cornerRadius: 8).fill(Color(.systemGray6)))
-            .padding(.horizontal, 20)
-    }
-}
-
-struct PasswordSecureField: View {
-    
-    @Binding var password: String
-    
-    var body: some View {
-        SecureField(("Mot de passe"), text: $password)
-            .padding()
-            .background(RoundedRectangle(cornerRadius: 8).fill(Color(.systemGray6)))
             .padding(.horizontal, 20)
     }
 }
