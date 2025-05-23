@@ -53,7 +53,7 @@ struct ContentView: View {
                             authenticationFail = !success
                         }
                     }){
-                        LoginButtonContent()
+                        ButtonContent( title: "Connexion")
                     }
                     NavigationLink("Créer un nouveau compte", destination: SignUpView())
                         .font(.caption)
@@ -67,19 +67,5 @@ struct ContentView: View {
             }
         }
         .navigationBarHidden(true)
-    }
-}
-
-struct LoginButtonContent: View {
-    var body: some View {
-        Text("Connexion")
-            .font(.headline)
-            .foregroundColor(.white)
-            .padding()
-            .frame(width: 350, height: 60)
-            .background(LinearGradient(gradient: Gradient(colors: [Color.blue, Color.purple]), startPoint: .leading, endPoint: .trailing))
-            .cornerRadius(12)
-            .shadow(radius: 5)
-            .padding(.horizontal, 20)
     }
 }

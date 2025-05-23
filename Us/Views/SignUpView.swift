@@ -91,16 +91,7 @@ struct SignUpView: View {
                             }
                         }
                     }) {
-                        Text("Inscription")
-                            .font(.headline)
-                            .foregroundColor(.white)
-                            .padding()
-                            .frame(maxWidth: .infinity)
-                            .background(LinearGradient(
-                                gradient: Gradient(colors: [Color(red: 0.6, green: 0.8, blue: 1.0), Color(red: 0.7, green: 1.0, blue: 0.9)]),
-                                startPoint: .leading, endPoint: .trailing))
-                            .cornerRadius(12)
-                            .shadow(radius: 4)
+                        ButtonContent( title: "Inscription")
                     }
                     .padding(.horizontal, 10)
                     .padding(.top, 10)

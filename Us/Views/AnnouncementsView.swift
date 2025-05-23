@@ -57,7 +57,8 @@ struct AnnouncementsView: View {
                             .padding(.horizontal)
                             .foregroundColor(Color("Font"))
                         
-                        AnnonceTitleView(title: $title)
+                        CustomTextField(placeholder: "Titre de l'annonce", text: $title)
+
                         // Picker pour sélectionner une catégorie
                         VStack {
                             Text("Sélectionner une catégorie")
@@ -75,6 +76,9 @@ struct AnnouncementsView: View {
                             .cornerRadius(10)
                             .shadow(color: Color.black.opacity(0.2), radius: 5, x: 0, y: 3)
                         }
+                        Text("Ajouter une annonce:")
+                            .font(.headline)
+                            .padding(.top)
                         TextEditorView(description: $description)
                         PhotoSelectionView(selectedPhotos: $selectedPhotos, selectedImages: $selectedImages)
                         
@@ -161,74 +165,5 @@ struct SubmitButtonContent: View {
             .cornerRadius(12)
             .shadow(radius: 5)
             .padding(.horizontal)
-    }
-}
-
-struct AnnonceTitleView: View {
-    @Binding var title: String
-    var body: some View {
-        TextField("Titre de l'annonce", text: $title)
-            .padding()
-            .background(Color.white.opacity(0.8))
-            .cornerRadius(10)
-            .shadow(color: Color.black.opacity(0.2), radius: 5, x: 0, y: 3)
-    }
-}
-
-struct TextEditorView: View {
-    @Binding var description: String
-    var body: some View {
-        Text("Ajouter une annonce:")
-            .font(.headline)
-            .padding(.top)
-        
-        TextEditor(text: $description)
-            .frame(height: 150)
-            .padding()
-            .background(Color.white.opacity(0.8))
-            .cornerRadius(10)
-            .shadow(color: Color.black.opacity(0.2), radius: 5, x: 0, y: 3)
-    }
-}
-
-struct PhotoSelectionView: View {
-    @Binding var selectedPhotos: [PhotosPickerItem]
-    @Binding var selectedImages: [UIImage]
-    
-    var body: some View {
-        VStack {
-            PhotosPicker(selection: $selectedPhotos, maxSelectionCount: 5, matching: .images) {
-                HStack {
-                    Image(systemName: "photo.on.rectangle")
-                    Text("Ajouter des photos (\(selectedImages.count)/5)")
-                }
-                .padding()
-                .background(Color("SkyBlue").opacity(0.2))
-                .cornerRadius(10)
-            }
-            
-            ScrollView(.horizontal, showsIndicators: false) {
-                HStack {
-                    ForEach(selectedImages, id: \.self) { image in
-                        Image(uiImage: image)
-                            .resizable()
-                            .scaledToFill()
-                            .frame(width: 80, height: 80)
-                            .clipShape(RoundedRectangle(cornerRadius: 10))
-                    }
-                }
-            }
-        }
-        .onChange(of: selectedPhotos) { newItems in
-            selectedImages = []
-            for item in newItems {
-                Task {
-                    if let data = try? await item.loadTransferable(type: Data.self),
-                       let image = UIImage(data: data) {
-                        selectedImages.append(image)
-                    }
-                }
-            }
-        }
     }
 }

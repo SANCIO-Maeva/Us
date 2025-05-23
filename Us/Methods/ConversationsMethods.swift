@@ -8,7 +8,7 @@
 import Foundation
 
 func getConversation(userId: Int, completion: @escaping (Bool, [Conversation]?, String?) -> Void) {
-    guard let url = URL(string: "http://localhost:3000/v1/conversations/user/\(userId)") else {
+    guard let url = URL(string: "https://fil-rouge-kmmu.onrender.com/v1/conversations/user/\(userId)") else {
         completion(false, nil, "URL invalide")
         return
     }

@@ -10,7 +10,7 @@ import Foundation
 // MARK: - Categorie Methods
 
 func getCategories(completion: @escaping (Bool, [Category]?, String?) -> Void) {
-    guard let url = URL(string: "http://localhost:3000/v1/categories") else {
+    guard let url = URL(string: "https://fil-rouge-kmmu.onrender.com/v1/categories") else {
         completion(false, nil, "URL invalide")
         return
     }

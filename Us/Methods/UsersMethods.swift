@@ -14,7 +14,7 @@ let currentDate = Date()
 
 func updatePassword(id: Int, password: String, completion: @escaping (Bool, String?) -> Void) {
     // Remplacer par l'URL de votre serveur réel
-    guard let url = URL(string: "http://localhost:3000/v1/users/\(id)") else {
+    guard let url = URL(string: "https://fil-rouge-kmmu.onrender.com/v1/users/\(id)") else {
         completion(false, "URL invalide")
         return
     }
@@ -131,7 +131,7 @@ func createUser(
         return
     }
     
-    guard let url = URL(string: "http://localhost:3000/v1/users") else {
+    guard let url = URL(string: "https://fil-rouge-kmmu.onrender.com/v1/users") else {
         DispatchQueue.main.async { completion(false, "URL invalide") }
         return
     }

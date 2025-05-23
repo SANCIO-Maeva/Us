@@ -19,7 +19,7 @@ func sendMessage(
     timestamp: Date,
     completion: @escaping (Bool, String?) -> Void
 ) {
-    guard let url = URL(string: "http://localhost:3000/v1/messages") else {
+    guard let url = URL(string: "https://fil-rouge-kmmu.onrender.com/v1/messages") else {
         DispatchQueue.main.async { completion(false, "URL invalide") }
         return
     }
@@ -86,7 +86,7 @@ func sendMessage(
 }
 
 func getMessages(userId1: Int, userId2: Int, completion: @escaping (Bool, [Msg]?, String?) -> Void) {
-    guard let url = URL(string: "http://localhost:3000/v1/messages/conversation/\(userId1)/\(userId2)") else {
+    guard let url = URL(string: "https://fil-rouge-kmmu.onrender.com/v1/messages/conversation/\(userId1)/\(userId2)") else {
         completion(false, nil, "URL invalide")
         return
     }

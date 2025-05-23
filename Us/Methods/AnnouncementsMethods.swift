@@ -20,7 +20,7 @@ func createAnnouncement(
     categoryId: Int,
     completion: @escaping (Bool, String?) -> Void
 ) {
-    guard let url = URL(string: "http://localhost:3000/v1/announcements") else {
+    guard let url = URL(string: "https://fil-rouge-kmmu.onrender.com/v1/announcements") else {
         DispatchQueue.main.async { completion(false, "URL invalide") }
         return
     }
@@ -88,7 +88,7 @@ func createAnnouncement(
 }
 
 func getAnnounceById(userId: Int, completion: @escaping (Bool, [Announcement]?, String?) -> Void) {
-    guard let url = URL(string: "http://localhost:3000/v1/announcements/user/\(userId)") else {
+    guard let url = URL(string: "https://fil-rouge-kmmu.onrender.com/v1/announcements/user/\(userId)") else {
         completion(false, nil, "URL invalide")
         return
     }
@@ -121,7 +121,7 @@ func getAnnounceById(userId: Int, completion: @escaping (Bool, [Announcement]?, 
 }
 
 func getAnnounceByCategoryId(categoryId: Int, completion: @escaping (Bool, [Announcement]?, String?) -> Void) {
-    guard let url = URL(string: "http://localhost:3000/v1/announcements/category/\(categoryId)") else {
+    guard let url = URL(string: "https://fil-rouge-kmmu.onrender.com/v1/announcements/category/\(categoryId)") else {
         completion(false, nil, "URL invalide")
         return
     }
@@ -155,7 +155,7 @@ func getAnnounceByCategoryId(categoryId: Int, completion: @escaping (Bool, [Anno
 
 
 func getAnnounce(completion: @escaping (Bool, [Announcement]?, String?) -> Void) {
-    guard let url = URL(string: "http://localhost:3000/v1/announcements/") else {
+    guard let url = URL(string: "https://fil-rouge-kmmu.onrender.com/v1/announcements/") else {
         completion(false, nil, "URL invalide")
         return
     }
@@ -188,7 +188,7 @@ func getAnnounce(completion: @escaping (Bool, [Announcement]?, String?) -> Void)
 }
 
 func deleteAnnounce(id_announcement: Int, completion: @escaping (Bool, String?) -> Void) {
-    guard let url = URL(string: "http://localhost:3000/v1/announcements/\(id_announcement)") else {
+    guard let url = URL(string: "https://fil-rouge-kmmu.onrender.com/v1/announcements/\(id_announcement)") else {
         completion(false, "URL invalide")
         return
     }
@@ -218,7 +218,7 @@ func deleteAnnounce(id_announcement: Int, completion: @escaping (Bool, String?) 
 }
 
 func updateAnnounce(id_announcement: Int, title: String?, description: String?, completion: @escaping (Bool, String?) -> Void) {
-    guard let url = URL(string: "http://localhost:3000/v1/announcements/\(id_announcement)") else {
+    guard let url = URL(string: "https://fil-rouge-kmmu.onrender.com/v1/announcements/\(id_announcement)") else {
         completion(false, "URL invalide")
         return
     }

@@ -158,11 +158,10 @@ struct EditAnnonceView: View {
         NavigationView {
             Form {
                 Section(header: Text("Titre de l'annonce")) {
-                    TextField("Titre", text: $title)
+                    CustomTextField(placeholder: "Titre de l'annonce", text: $title)
                 }
                 Section(header: Text("Description")) {
-                    TextEditor(text: $description)
-                        .frame(height: 150)
+                    TextEditorView(description: $description)
                 }
             }
             .navigationTitle("Modifier l'annonce")
@@ -208,18 +207,13 @@ struct MessageView: View {
                     .font(.headline)
                     .padding(.horizontal)
                 
-                TextEditor(text: $message)
-                    .frame(height: 150)
-                    .padding()
-                    .background(Color(.systemGray6))
-                    .cornerRadius(10)
-                    .padding(.horizontal)
+                TextEditorView(description: $message)
                 
                 Spacer()
                 
                 Button(action: {
                     sendMessage(
-                        id_message: Int.init(), // Génération d'un ID aléatoire
+                        id_message: Int.init(),
                         content: message,
                         userIdSender: userIdSender,
                         userIdReceiver: recipientId,
