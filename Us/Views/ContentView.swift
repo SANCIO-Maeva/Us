@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-//import Foundation
 
 struct ContentView: View {
     
@@ -22,6 +21,10 @@ struct ContentView: View {
         NavigationView {
             ZStack {
                 VStack {
+                    Image("Image")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 150, height: 150)
                     Text("Bienvenue!")
                         .font(.largeTitle)
                         .fontWeight(.bold)
@@ -53,7 +56,7 @@ struct ContentView: View {
                             authenticationFail = !success
                         }
                     }){
-                        ButtonContent( title: "Connexion")
+                        ButtonContent(title: "Connexion")
                     }
                     NavigationLink("Créer un nouveau compte", destination: SignUpView())
                         .font(.caption)

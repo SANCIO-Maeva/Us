@@ -81,7 +81,8 @@ struct HomeView: View {
                             NavigationLink(destination: AnnouncementsView()) {
                                 Image(systemName: "plus.circle.fill")
                                     .font(.title)
-                                    .foregroundColor(Color("Peach"))
+                                    .foregroundColor(Color("Peach")
+                                    )
                             }
                         }
                         
@@ -114,19 +115,20 @@ struct HomeView: View {
                         .font(.title2)
                         .fontWeight(.bold)
                         .foregroundColor(Color("Font"))
-                }
-                
-                ScrollView(.vertical, showsIndicators: false) {
-                    VStack(spacing: 15) {
-                        ForEach(allAnnouncements) { announcement in
-                            NavigationLink(destination: AnnonceDetailView(annonce: announcement, isMyAnnonce: isUserAnnonce(announcement))) {
-                                CardView2(title: announcement.title, description: announcement.description)
+
+                    ScrollView(.vertical, showsIndicators: false) {
+                        VStack(spacing: 15) {
+                            ForEach(allAnnouncements) { announcement in
+                                NavigationLink(destination: AnnonceDetailView(annonce: announcement, isMyAnnonce: isUserAnnonce(announcement))) {
+                                    CardView2(title: announcement.title, description: announcement.description)
+                                }
                             }
                         }
                     }
+                    .padding(.bottom)
                 }
             }
-            .padding()
+            .padding(.top)
             ToolBarView(selectedTab: "home")
         }
         .onAppear {

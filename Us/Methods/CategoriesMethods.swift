@@ -7,10 +7,30 @@
 
 import Foundation
 
+// MARK: - UserDefaults Extension for Storing Categories Data
+
+extension UserDefaults {
+    func category(forKey defaultName: String) -> Category? {
+        guard let data = data(forKey: defaultName) else { return nil }
+        do {
+            return try JSONDecoder().decode(Category.self, from: data)
+        } catch {
+            print(error)
+            return nil
+        }
+    }
+    func set2(_ value: Category, forKey defaultName: String) {
+        if let data = try? JSONEncoder().encode(value) {
+            set(data, forKey: defaultName)
+        }
+    }
+}
 // MARK: - Categorie Methods
 
 func getCategories(completion: @escaping (Bool, [Category]?, String?) -> Void) {
-    guard let url = URL(string: "https://fil-rouge-kmmu.onrender.com/v1/categories") else {
+    let apiBaseUrl = Bundle.main.object(forInfoDictionaryKey: "ApiBaseUrl") as! String
+
+    guard let url = URL(string: apiBaseUrl + "/categories") else {
         completion(false, nil, "URL invalide")
         return
     }
@@ -26,8 +46,7 @@ func getCategories(completion: @escaping (Bool, [Category]?, String?) -> Void) {
         }
 
         // Afficher les données JSON reçues pour vérification
-        if let jsonString = String(data: data, encoding: .utf8) {
-//            print("Données JSON reçues: \(jsonString)")
+        if String(data: data, encoding: .utf8) != nil {
         }
 
         let decoder = JSONDecoder()

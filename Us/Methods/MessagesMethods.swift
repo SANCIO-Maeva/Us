@@ -19,7 +19,9 @@ func sendMessage(
     timestamp: Date,
     completion: @escaping (Bool, String?) -> Void
 ) {
-    guard let url = URL(string: "https://fil-rouge-kmmu.onrender.com/v1/messages") else {
+    let apiBaseUrl = Bundle.main.object(forInfoDictionaryKey: "ApiBaseUrl") as! String
+
+    guard let url = URL(string: apiBaseUrl + "/messages") else {
         DispatchQueue.main.async { completion(false, "URL invalide") }
         return
     }
@@ -86,32 +88,35 @@ func sendMessage(
 }
 
 func getMessages(userId1: Int, userId2: Int, completion: @escaping (Bool, [Msg]?, String?) -> Void) {
-    guard let url = URL(string: "https://fil-rouge-kmmu.onrender.com/v1/messages/conversation/\(userId1)/\(userId2)") else {
+    let apiBaseUrl = Bundle.main.object(forInfoDictionaryKey: "ApiBaseUrl") as! String
+
+    guard let url = URL(string: apiBaseUrl + "/messages/conversation/\(userId1)/\(userId2)") else {
         completion(false, nil, "URL invalide")
         return
     }
-    
+    print(userId2)
+    print(userId1)
     let task = URLSession.shared.dataTask(with: url) { data, response, error in
-        if let error = error {
-            completion(false, nil, "Erreur de réseau: \(error.localizedDescription)")
-            return
-        }
-        guard let data = data else {
-            completion(false, nil, "Aucune donnée reçue")
-            return
-        }
-        
-        // Afficher les données JSON reçues pour vérification
-        if let jsonString = String(data: data, encoding: .utf8) {
-            print("Données JSON reçues: \(jsonString)")
-        }
+        do{
+            if let error = error {
+                completion(false, nil, "Erreur de réseau: \(error.localizedDescription)")
+                return
+            }
+            guard let data = data else {
+                completion(false, nil, "Aucune donnée reçue")
+                return
+            }
+             print(data)
+            // Afficher les données JSON reçues pour vérification
+            if let jsonString = String(data: data, encoding: .utf8) {
+                print("Données JSON reçues: \(jsonString)")
+            }
 
-        let decoder = JSONDecoder()
-        decoder.dateDecodingStrategy = .iso8601 // Si le timestamp est en format ISO 8601
-
-        do {
-            let messages = try decoder.decode([Msg].self, from: data)
+            let decoder = JSONDecoder()
+            decoder.dateDecodingStrategy = .iso8601 // Si le timestamp est en format ISO 8601
+            let messages = try decoder.decode([Msg]?.self, from: data)
             completion(true, messages, nil)
+            
         } catch let decodingError {
             print("Erreur de décodage JSON : \(decodingError)")
             completion(false, nil, "Erreur de décodage JSON: \(decodingError.localizedDescription)")

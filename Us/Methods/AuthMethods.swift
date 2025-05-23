@@ -19,7 +19,6 @@ extension UserDefaults {
             return nil
         }
     }
-    
     func set(_ value: User, forKey defaultName: String) {
         if let data = try? JSONEncoder().encode(value) {
             set(data, forKey: defaultName)
@@ -31,7 +30,9 @@ extension UserDefaults {
 
 // Authenticates the user and saves user data in UserDefaults
 func authenticateUser(mail: String, password: String, completion: @escaping (Bool, String?) -> Void) {
-    guard let url = URL(string: "https://fil-rouge-kmmu.onrender.com/v1/auth/login") else {
+    let apiBaseUrl = Bundle.main.object(forInfoDictionaryKey: "ApiBaseUrl") as! String
+
+    guard let url = URL(string: apiBaseUrl + "/auth/login") else {
         DispatchQueue.main.async { completion(false, "URL invalide") }
         return
     }
@@ -75,7 +76,9 @@ func authenticateUser(mail: String, password: String, completion: @escaping (Boo
 
 // Authenticates the user based on forgotten credentials (mail and phone)
 func authenticateForgotUser(mail: String, phone: String, completion: @escaping (Bool, String?) -> Void) {
-    guard let url = URL(string: "https://fil-rouge-kmmu.onrender.com/v1/auth/forgot") else { return }
+    let apiBaseUrl = Bundle.main.object(forInfoDictionaryKey: "ApiBaseUrl") as! String
+
+    guard let url = URL(string: apiBaseUrl + "/auth/forgot") else { return }
     
     var request = URLRequest(url: url)
     request.httpMethod = "POST"

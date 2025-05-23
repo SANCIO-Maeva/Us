@@ -15,7 +15,7 @@ struct ButtonNav: View {
             Text(name)
                 .font(.footnote)
                 .fontWeight(.medium)
-                .foregroundColor(Color("SkyBlue"))
+                .foregroundColor(Color("Font"))
                 .padding(.horizontal, 14)
                 .padding(.vertical, 12)
                 .overlay(
@@ -47,6 +47,17 @@ struct HeaderView: View {
 
     var body: some View {
         VStack {
+            HStack{
+                Text("Union")
+                    .font(.title)
+                    .bold()
+                    .foregroundColor(Color("Peach"))
+                
+                Text("Services")
+                    .font(.title)
+                    .bold()
+                    .foregroundColor(Color("SkyBlue"))
+            }
             HStack {
                 VStack(alignment: .leading) {
                     Text("Bienvenue")

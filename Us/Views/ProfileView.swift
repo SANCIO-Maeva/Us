@@ -13,6 +13,9 @@ struct ProfileView: View {
     @State private var mail: String = ""
     @State private var phone: String = ""
     @State private var isEditing: Bool = false
+    @State private var authenticationSucceed: Bool = false
+    @State private var authenticationFail: Bool = false
+
     
     private func fetchUserProfile() {
         if let userData = UserDefaults.standard.data(forKey: "User"),
@@ -61,20 +64,16 @@ struct ProfileView: View {
             Spacer()
             
             VStack(spacing: 15) {
-                GradientButton(
-                    title: "Modifier l'annonce",
-                    colors: [Color(.cyan), Color(.mint)]
-                ){
+                Button(action: {
                     isEditing.toggle()
+                }) {
+                    ButtonContent(title: "Modifier le profil")
                 }
-                Button(action: logout) {
-                    Text("Se déconnecter")
-                        .frame(maxWidth: .infinity)
-                        .padding()
-                        .tint(.red)
+                Button ("Se déconnecter"){
+                    logout(authenticationSucceed: $authenticationSucceed, authenticationFail: $authenticationFail)
                 }
+                .foregroundColor(.red)
             }
-            .padding(.horizontal, 40)
             .padding(.bottom, 30)
         }
         .background(Color(.systemGray6))

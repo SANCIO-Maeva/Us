@@ -14,7 +14,9 @@ let currentDate = Date()
 
 func updatePassword(id: Int, password: String, completion: @escaping (Bool, String?) -> Void) {
     // Remplacer par l'URL de votre serveur réel
-    guard let url = URL(string: "https://fil-rouge-kmmu.onrender.com/v1/users/\(id)") else {
+    let apiBaseUrl = Bundle.main.object(forInfoDictionaryKey: "ApiBaseUrl") as! String
+
+    guard let url = URL(string: apiBaseUrl + "/users/\(id)") else {
         completion(false, "URL invalide")
         return
     }
@@ -59,10 +61,15 @@ func updatePassword(id: Int, password: String, completion: @escaping (Bool, Stri
 
 
 // Logs out the current user by clearing stored data
-func logout() {
+func logout(authenticationSucceed: Binding<Bool>, authenticationFail: Binding<Bool>) {
     print("Déconnexion...")
-    
+
+    UserDefaults.standard.removeObject(forKey: "auth_token")
     UserDefaults.standard.removeObject(forKey: "User")
+    
+    authenticationSucceed.wrappedValue = false
+    authenticationFail.wrappedValue = false
+
     if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
        let window = windowScene.windows.first {
         window.rootViewController = UIHostingController(rootView: ContentView())
@@ -130,8 +137,9 @@ func createUser(
         DispatchQueue.main.async { completion(false, "Les coordonnées sont invalides.") }
         return
     }
-    
-    guard let url = URL(string: "https://fil-rouge-kmmu.onrender.com/v1/users") else {
+    let apiBaseUrl = Bundle.main.object(forInfoDictionaryKey: "ApiBaseUrl") as! String
+
+    guard let url = URL(string: apiBaseUrl + "/users") else {
         DispatchQueue.main.async { completion(false, "URL invalide") }
         return
     }

@@ -12,7 +12,8 @@ struct DiscussionsView: View {
     @State private var userId: Int = 0
     @State private var refreshTimer: Timer?
     @State private var hasNewMessages: Bool = false
-
+    @State private var moi: String = ""
+    @State private var lui : String = ""
     
     private func startAutoRefresh() {
         refreshTimer = Timer.scheduledTimer(withTimeInterval: 5.0, repeats: true) { _ in
@@ -54,41 +55,44 @@ struct DiscussionsView: View {
                         .padding(.horizontal)
                         .foregroundColor(Color("Font"))
                     
-                    ForEach(allConversations) { conversation in
-                        NavigationLink(destination: ChatView(userId: userId, conversation: conversation)) {
-                            ConversationRow(conversation: conversation)
-                                .background(Color.white)
+                    ForEach($allConversations) { conversation in
+                        let it = conversation.userSender.wrappedValue == userId ? conversation.user2 : conversation.user1
+                        let me = conversation.userSender.wrappedValue == userId ? conversation.user1 : conversation.user2
+    
+                        NavigationLink(destination: ChatView(userId: userId, conversation: conversation.wrappedValue, it: it.wrappedValue)) {
+                            ConversationRow(conversation: conversation.wrappedValue, me: me.wrappedValue, it: it.wrappedValue)
                                 .cornerRadius(15)
-                                .shadow(color: .gray.opacity(0.1), radius: 3, x: 0, y: 2)
-                                .padding(.horizontal)
+                                .shadow(color: Color.gray.opacity(0.1), radius: 3, x: 0, y: 2)
+                                .padding(Edge.Set.horizontal)
                         }
                     }
                 }
                 .padding(.vertical)
             }
-            .background(Color(red: 0.98, green: 0.98, blue: 1.0).ignoresSafeArea())
             ToolBarView(selectedTab: "messages")
         }
         .onAppear {
             loadUserProfile()
         }
         .edgesIgnoringSafeArea(.bottom)
-        
+        .navigationBarHidden(true)
     }
 }
 
 struct ConversationRow: View {
     let conversation: Conversation
+    let me: Conversation.BasicUser
+    let it: Conversation.BasicUser
     
     var body: some View {
         HStack(spacing: 8) {
             Circle()
                 .fill(Color.mint)
                 .frame(width: 50, height: 50)
-                .overlay(Text(conversation.user1.fullname.prefix(1)).foregroundColor(.white))
+                .overlay(Text(it.fullname.prefix(1)).foregroundColor(.white))
             
             VStack(alignment: .leading, spacing: 4) {
-                Text(conversation.user1.fullname)
+                Text(it.fullname)
                     .font(.headline)
                 Text(conversation.lastMessage.content.prefix(20))
                     .font(.subheadline)
@@ -100,12 +104,14 @@ struct ConversationRow: View {
                 .foregroundColor(.gray)
         }
         .padding(10)
+        .background(.ultraThinMaterial)
     }
 }
 
 struct ChatView: View {
     let userId: Int
     let conversation: Conversation
+    let it: Conversation.BasicUser
     @State private var messages: [Msg] = []
     @State private var refreshTimer: Timer?
 
@@ -121,7 +127,7 @@ struct ChatView: View {
     }
     
     private func fetchMessages() {
-        getMessages(userId1: userId, userId2: conversation.user1.id_user) { success, allMessages, errorMessage in
+        getMessages(userId1: userId, userId2: it.id_user) { success, allMessages, errorMessage in
             if success, let allMessages = allMessages {
                 self.messages = allMessages
             } else {
@@ -145,7 +151,7 @@ struct ChatView: View {
             
             MessageInputView(
                 userIdSender: userId,
-                recipientId: conversation.user1.id_user,
+                recipientId: it.id_user,
                 announcementId: conversation.announcementId,
                 conversationId: conversation.id_conversation,
                 onSend: {
@@ -155,8 +161,7 @@ struct ChatView: View {
                 .padding()
                 .background(Color(.systemGray6))
         }
-        .background(Color(red: 0.98, green: 0.98, blue: 1.0).ignoresSafeArea())
-        .navigationTitle(conversation.user1.fullname)
+        .navigationTitle(it.fullname)
         .onAppear {
             fetchMessages()
             startAutoRefresh()
@@ -201,7 +206,7 @@ struct MessageInputView: View {
         HStack(spacing: 10) {
             TextField("Écrire un message...", text: $messageText)
                 .padding(12)
-                .background(Color.white)
+                .background(.ultraThinMaterial)
                 .cornerRadius(20)
                 .shadow(color: .gray.opacity(0.2), radius: 4, x: 0, y: 2)
 

@@ -8,8 +8,8 @@
 import SwiftUI
 
 struct ForgotPasswordView: View {
-    @State private var mail: String = "john.doe@example.com"
-    @State private var phone: String = "1234567890"
+    @State private var mail: String = "hiboux@gmailk.com"
+    @State private var phone: String = "0689898987"
     
     @State private var authenticationSucceed: Bool = false
     @State private var authenticationFail: Bool = false
@@ -18,11 +18,11 @@ struct ForgotPasswordView: View {
         NavigationStack {
             VStack {
                 ScrollView {
-                    VStack(alignment: .leading, spacing: 20) {
+                    VStack(spacing: 20) {
                         Text("Mot de Passe oublié ?")
                             .font(.largeTitle)
                             .fontWeight(.bold)
-                            .foregroundColor(Color("SkyBlue"))
+                            .foregroundColor(Color("Font"))
                         
                         Text("Vérifiez votre email et votre numéro de téléphone")
                             .font(.caption)
@@ -42,16 +42,14 @@ struct ForgotPasswordView: View {
                 }
                 
                 VStack(spacing: 12) {
-                    GradientButton(
-                        title: "Vérifier",
-                        colors: [Color(.cyan), Color(.mint)]
-                    ) {
+                    Button(action: {
                         Us.authenticateForgotUser(mail: mail, phone: phone) { success, errorMessage in
                             authenticationSucceed = success
                             authenticationFail = !success
                         }
+                    }) {
+                        ButtonContent(title: "Vérifier")
                     }
-                    
                     NavigationLink(
                         destination: UpdatePassword().navigationBarBackButtonHidden(true),
                         isActive: $authenticationSucceed
@@ -61,18 +59,16 @@ struct ForgotPasswordView: View {
                     .opacity(0)
                 }
                 .padding()
-                .background(Color.white.ignoresSafeArea(edges: .bottom))
             }
             .background(Color(.systemGray6).opacity(0.2))
-            .navigationTitle("Réinitialisation du mot de passe")
             .navigationBarTitleDisplayMode(.inline)
         }
     }
 }
 
 struct UpdatePassword: View {
-    @State private var password: String = "Azerty7513!"
-    @State private var confirmedpassword: String = "Azerty7513!"
+    @State private var password: String = ""
+    @State private var confirmedpassword: String = ""
     @State private var userId: Int?
     
     @State private var authenticationFail: Bool = false
@@ -92,11 +88,13 @@ struct UpdatePassword: View {
         NavigationStack {
             VStack {
                 ScrollView {
-                    VStack(alignment: .leading, spacing: 20) {
+                    VStack( spacing: 20) {
                         Text("Réinitialiser le mot de passe")
                             .font(.title)
                             .fontWeight(.bold)
-                            .foregroundColor(Color("SkyBlue"))
+                            .multilineTextAlignment(.center)
+                            .foregroundColor(Color("Font"))
+                            .padding(.bottom, 40)
                         
                         SecureCustomField(placeholder: "Nouveau mot de passe", text: $password)
                         SecureCustomField(placeholder: "Confirmer le mot de passe", text: $confirmedpassword)
@@ -111,21 +109,19 @@ struct UpdatePassword: View {
                 }
                 
                 VStack(spacing: 12) {
-                    GradientButton(
-                        title: "Valider",
-                        colors: [Color(.cyan), Color(.mint)]
-                    ) {
+                    Button(action: {
                         guard password == confirmedpassword else {
                             authenticationFail = true
                             errorMessage = "Les mots de passe ne sont pas identiques."
                             return
                         }
+                        
                         guard let id = userId else {
                             authenticationFail = true
                             errorMessage = "Utilisateur introuvable."
                             return
                         }
-                        
+
                         Us.updatePassword(id: id, password: password) { success, message in
                             DispatchQueue.main.async {
                                 if success {
@@ -137,13 +133,15 @@ struct UpdatePassword: View {
                                 }
                             }
                         }
+                    }) {
+                        ButtonContent(title: "Valider")
                     }
+
                     NavigationLink(destination: ContentView().navigationBarBackButtonHidden(true), isActive: $navigateToContent) {
                         EmptyView()
                     }
                 }
                 .padding()
-                .background(Color.white.ignoresSafeArea(edges: .bottom))
             }
             .background(Color(.systemGray6).opacity(0.2))
             .navigationBarBackButtonHidden(true)

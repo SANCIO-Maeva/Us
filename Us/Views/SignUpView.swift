@@ -9,13 +9,13 @@ import SwiftUI
 
 struct SignUpView: View {
     
-    @State private var fullname: String = "Kipling Hiboux"
-    @State private var address: String = "40 rue des terres au curé"
-    @State private var phone: String = "0689898989"
-    @State private var mail: String = "hiboux@gmail.com"
-    @State private var password: String = "Hiboux123!"
-    @State private var postalCode: String = "75013"
-    @State private var bio: String = "je suis un oiseaux de nuit qui sait tout faire"
+    @State private var fullname: String = ""
+    @State private var address: String = ""
+    @State private var phone: String = ""
+    @State private var mail: String = ""
+    @State private var password: String = ""
+    @State private var postalCode: String = ""
+    @State private var bio: String = ""
     private var latitude: String = ""
     private var longitude: String = ""
     private var id_user: Int? = 0

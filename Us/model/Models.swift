@@ -47,6 +47,10 @@ struct Msg: Codable, Identifiable {
     var announcementId: Int?
     var conversationId: Int
     var timestamp: String
+    
+    private enum CodingKeys: String, CodingKey {
+        case id_message, content, userIdSender, userIdReceiver, announcementId, conversationId, timestamp
+    }
 }
 
 struct Conversation: Codable, Identifiable {

@@ -16,9 +16,11 @@ struct CustomTextField: View {
     var body: some View {
         TextField(placeholder, text: $text)
             .padding()
-            .background(Color.white.opacity(0.8))
-            .border(Color.peach)
-            .cornerRadius(10)
+            .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
+            .overlay(
+                RoundedRectangle(cornerRadius: 10)
+                    .stroke(Color("Peach"), lineWidth: 2)
+            )
     }
 }
 
@@ -28,10 +30,11 @@ struct TextEditorView: View {
         TextEditor(text: $description)
             .frame(height: 150)
             .padding()
-            .background(Color.white.opacity(0.8))
-            .border(Color.peach)
-
-            .cornerRadius(10)
+            .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
+            .overlay(
+                RoundedRectangle(cornerRadius: 10)
+                    .stroke(Color("Peach"), lineWidth: 2)
+            )
     }
 }
 
@@ -42,9 +45,11 @@ struct SecureCustomField: View {
     var body: some View {
         SecureField(placeholder, text: $text)
             .padding()
-            .background(Color.white.opacity(0.8))
-            .cornerRadius(10)
-            .border(Color.peach)
+            .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
+            .overlay(
+                RoundedRectangle(cornerRadius: 10)
+                    .stroke(Color("Peach"), lineWidth: 2)
+            )
      }
 }
 

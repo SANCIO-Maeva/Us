@@ -90,7 +90,7 @@ struct AnnouncementsView: View {
                     Button(action: {
                         showConfirmation = true
                     }) {
-                        SubmitButtonContent()
+                        ButtonContent(title: "Publier l'annonce")
                     }
                     .alert(isPresented: $showConfirmation) {
                         Alert(

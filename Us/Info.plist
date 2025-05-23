@@ -1,12 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-<!--
-   Info.plist
-   Us
-
-   Created by Maëva SANCIO on 30/04/2025.
-   Copyright (c) 2025 ___ORGANIZATIONNAME___. All rights reserved.
--->
 <plist version="1.0">
-<dict/>
+<dict>
+	<key>ApiBaseUrl</key>
+	<string>$(API_BASE_URL)</string>
+	<key>CFBundleIdentifier</key>
+	<string></string>
+	<key>CFBundleName</key>
+	<string>Us</string>
+	<key>CFBundleIdentifier	</key>
+	<string>Us
+com.maevasancio.us
+</string>
+	<key>CFBundleShortVersionString	</key>
+	<string>1.0</string>
+	<key>CFBundleVersion	</key>
+	<string>1</string>
+	<key>UILaunchStoryboardName	</key>
+	<string>LaunchScreen</string>
+</dict>
 </plist>

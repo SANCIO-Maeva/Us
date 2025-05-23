@@ -15,19 +15,19 @@ struct ToolBarView: View {
 
     var body: some View {
         HStack {
-            ToolBarItem(icon: "house.fill", title: "Accueil", color: Color("SkyBlue"), tag: "home", selectedTab: $selectedTab) {
+            ToolBarItem(icon: "house.fill", title: "Accueil", color: Color("Font"), tag: "home", selectedTab: $selectedTab) {
                 HomeView()
             }
             
             Spacer()
             
-            ToolBarItem(icon: "plus.circle.fill", title: "Ajouter", color: Color("SkyBlue"), tag: "add", selectedTab: $selectedTab) {
+            ToolBarItem(icon: "plus.circle.fill", title: "Ajouter", color: Color("Font"), tag: "add", selectedTab: $selectedTab) {
                 AnnouncementsView()
             }
             
             Spacer()
             
-            ToolBarItem(icon: "message.fill", title: "Messages", color: Color("SkyBlue"), tag: "messages", selectedTab: $selectedTab) {
+            ToolBarItem(icon: "message.fill", title: "Messages", color: Color("Font"), tag: "messages", selectedTab: $selectedTab) {
                 DiscussionsView()
             }
         }

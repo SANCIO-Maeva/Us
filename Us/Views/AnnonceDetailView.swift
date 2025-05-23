@@ -41,7 +41,7 @@ struct AnnonceDetailView: View {
                 VStack(alignment: .leading, spacing: 20) {
                     Text("Titre de l'annonce")
                         .font(.headline)
-                        .foregroundColor(Color("SkyBlue"))
+                        .foregroundColor(Color("Font"))
 
                     Text(updatedTitle)
                         .font(.title2)
@@ -52,7 +52,7 @@ struct AnnonceDetailView: View {
 
                     Text("Description")
                         .font(.headline)
-                        .foregroundColor(Color("SkyBlue"))
+                        .foregroundColor(Color("Font"))
 
                     Text(updatedDescription)
                         .font(.body)
@@ -60,7 +60,7 @@ struct AnnonceDetailView: View {
                     
                     Text("Photos")
                         .font(.headline)
-                        .foregroundColor(Color("SkyBlue"))
+                        .foregroundColor(Color("Font"))
                     if let image = imageData {
                         Image(uiImage: image)
                             .resizable()
@@ -79,13 +79,12 @@ struct AnnonceDetailView: View {
 
             VStack(spacing: 12) {
                 if isMyAnnonce {
-                    GradientButton(
-                        title: "Modifier l'annonce",
-                        colors: [Color(.cyan), Color(.mint)]
-                    ) {
+                    Button(action: {
                         newTitle = updatedTitle
                         newDescription = updatedDescription
                         isEditing2.toggle()
+                    }) {
+                        ButtonContent(title: "Modifier l'annonce")
                     }
 
                     Button("Supprimer l'annonce") {
@@ -97,16 +96,14 @@ struct AnnonceDetailView: View {
                     .cornerRadius(12)
                     .shadow(radius: 5)
                 } else {
-                    GradientButton(
-                        title: "Envoyer un message",
-                        colors: [Color(.mint), Color("Peach")]
-                    ) {
+                    Button(action: {
                         isMessageViewPresented.toggle()
+                    }) {
+                        ButtonContent(title: "Envoyer un message")
                     }
                 }
             }
             .padding()
-            .background(Color.white.ignoresSafeArea(edges: .bottom))
         }
         .background(Color(.systemGray6).opacity(0.2))
         .navigationTitle("Détail de l'annonce")
@@ -230,13 +227,7 @@ struct MessageView: View {
                         }
                     )
                 }) {
-                    Text("Envoyer")
-                        .frame(maxWidth: .infinity)
-                        .padding()
-                        .foregroundColor(.white)
-                        .background(LinearGradient(gradient: Gradient(colors: [Color.blue, Color.green]), startPoint: .leading, endPoint: .trailing))
-                        .cornerRadius(12)
-                        .shadow(radius: 5)
+                    ButtonContent(title: "Envoyer")
                 }
                 .padding(.horizontal)
             }
@@ -256,25 +247,4 @@ struct MessageView: View {
     }
 }
 
-struct GradientButton: View {
-    var title: String
-    var colors: [Color]
-    var action: () -> Void
-    
-    var body: some View {
-        Button(action: action) {
-            Text(title)
-                .frame(maxWidth: .infinity)
-                .padding()
-                .foregroundColor(.white)
-                .background(
-                    LinearGradient(gradient: Gradient(colors: colors),
-                                   startPoint: .leading,
-                                   endPoint: .trailing)
-                )
-                .cornerRadius(12)
-                .shadow(radius: 5)
-        }
-    }
-}
 

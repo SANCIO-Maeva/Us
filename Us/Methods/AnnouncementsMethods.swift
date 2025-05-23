@@ -20,8 +20,10 @@ func createAnnouncement(
     categoryId: Int,
     completion: @escaping (Bool, String?) -> Void
 ) {
-    guard let url = URL(string: "https://fil-rouge-kmmu.onrender.com/v1/announcements") else {
-        DispatchQueue.main.async { completion(false, "URL invalide") }
+    let apiBaseUrl = Bundle.main.object(forInfoDictionaryKey: "ApiBaseUrl") as! String
+
+    guard let url = URL(string: apiBaseUrl + "/announcements") else {
+        DispatchQueue.main.async { completion(false, "URL invalide")}
         return
     }
     
@@ -88,107 +90,115 @@ func createAnnouncement(
 }
 
 func getAnnounceById(userId: Int, completion: @escaping (Bool, [Announcement]?, String?) -> Void) {
-    guard let url = URL(string: "https://fil-rouge-kmmu.onrender.com/v1/announcements/user/\(userId)") else {
+    let apiBaseUrl = Bundle.main.object(forInfoDictionaryKey: "ApiBaseUrl") as! String
+    
+    guard let url = URL(string: apiBaseUrl + "/announcements/user/\(userId)") else {
         completion(false, nil, "URL invalide")
         return
     }
 
-    let task = URLSession.shared.dataTask(with: url) { data, response, error in
+    let task1 = URLSession.shared.dataTask(with: url) { data1, response, error in
         if let error = error {
             completion(false, nil, "Erreur de réseau: \(error.localizedDescription)")
             return
         }
-        guard let data = data else {
+        guard let data1 = data1 else {
             completion(false, nil, "Aucune donnée reçue")
             return
         }
 
         // Afficher les données JSON reçues pour vérification
-        if let jsonString = String(data: data, encoding: .utf8) {
-//            print("Données JSON reçues: \(jsonString)")
+        if let jsonStringId = String(data: data1, encoding: .utf8) {
+//            print("Données JSON reçues: \(jsonStringId)")
         }
 
-        let decoder = JSONDecoder()
+        let decoder1 = JSONDecoder()
 
         do {
-            let announcements = try decoder.decode([Announcement].self, from: data)
+            let announcements = try decoder1.decode([Announcement].self, from: data1)
             completion(true, announcements, nil)
         } catch {
             completion(false, nil, "Erreur de décodage JSON: \(error.localizedDescription)")
         }
     }
-    task.resume()
+    task1.resume()
 }
 
 func getAnnounceByCategoryId(categoryId: Int, completion: @escaping (Bool, [Announcement]?, String?) -> Void) {
-    guard let url = URL(string: "https://fil-rouge-kmmu.onrender.com/v1/announcements/category/\(categoryId)") else {
+    let apiBaseUrl = Bundle.main.object(forInfoDictionaryKey: "ApiBaseUrl") as! String
+
+    guard let url = URL(string: apiBaseUrl + "/announcements/category/\(categoryId)") else {
         completion(false, nil, "URL invalide")
         return
     }
 
-    let task = URLSession.shared.dataTask(with: url) { data, response, error in
+    let task2 = URLSession.shared.dataTask(with: url) { data2, response, error in
         if let error = error {
             completion(false, nil, "Erreur de réseau: \(error.localizedDescription)")
             return
         }
-        guard let data = data else {
+        guard let data2 = data2 else {
             completion(false, nil, "Aucune donnée reçue")
             return
         }
 
         // Afficher les données JSON reçues pour vérification
-        if let jsonString = String(data: data, encoding: .utf8) {
+        if let jsonString = String(data: data2, encoding: .utf8) {
 //            print("Données JSON reçues: \(jsonString)")
         }
 
         let decoder = JSONDecoder()
 
         do {
-            let AnnouncementCategory = try decoder.decode([Announcement].self, from: data)
+            let AnnouncementCategory = try decoder.decode([Announcement].self, from: data2)
             completion(true, AnnouncementCategory, nil)
         } catch {
             completion(false, nil, "Erreur de décodage JSON: \(error.localizedDescription)")
         }
     }
-    task.resume()
+    task2.resume()
 }
 
 
 func getAnnounce(completion: @escaping (Bool, [Announcement]?, String?) -> Void) {
-    guard let url = URL(string: "https://fil-rouge-kmmu.onrender.com/v1/announcements/") else {
+    let apiBaseUrl = Bundle.main.object(forInfoDictionaryKey: "ApiBaseUrl") as! String
+
+    guard let url = URL(string: apiBaseUrl + "/announcements") else {
         completion(false, nil, "URL invalide")
         return
     }
     
-    let task = URLSession.shared.dataTask(with: url) { data, response, error in
+    let task3 = URLSession.shared.dataTask(with: url) { data3, response, error in
         if let error = error {
             completion(false, nil, "Erreur de réseau: \(error.localizedDescription)")
             return
         }
-        guard let data = data else {
+        guard let data3 = data3 else {
             completion(false, nil, "Aucune donnée reçue")
             return
         }
 
         // Afficher les données JSON reçues pour vérification
-        if let jsonString = String(data: data, encoding: .utf8) {
+        if let jsonString = String(data: data3, encoding: .utf8) {
 //            print("Données JSON reçues: \(jsonString)")
         }
 
-        let decoder = JSONDecoder()
+        let decoder3 = JSONDecoder()
 
         do {
-            let allAnnouncements = try decoder.decode([Announcement].self, from: data)
+            let allAnnouncements = try decoder3.decode([Announcement].self, from: data3)
             completion(true, allAnnouncements, nil)
         } catch {
             completion(false, nil, "Erreur de décodage JSON: \(error.localizedDescription)")
         }
     }
-    task.resume()
+    task3.resume()
 }
 
 func deleteAnnounce(id_announcement: Int, completion: @escaping (Bool, String?) -> Void) {
-    guard let url = URL(string: "https://fil-rouge-kmmu.onrender.com/v1/announcements/\(id_announcement)") else {
+    let apiBaseUrl = Bundle.main.object(forInfoDictionaryKey: "ApiBaseUrl") as! String
+
+    guard let url = URL(string: apiBaseUrl + "/announcements/\(id_announcement)") else {
         completion(false, "URL invalide")
         return
     }
@@ -218,7 +228,9 @@ func deleteAnnounce(id_announcement: Int, completion: @escaping (Bool, String?) 
 }
 
 func updateAnnounce(id_announcement: Int, title: String?, description: String?, completion: @escaping (Bool, String?) -> Void) {
-    guard let url = URL(string: "https://fil-rouge-kmmu.onrender.com/v1/announcements/\(id_announcement)") else {
+    let apiBaseUrl = Bundle.main.object(forInfoDictionaryKey: "ApiBaseUrl") as! String
+
+    guard let url = URL(string: apiBaseUrl + "/announcements/\(id_announcement)") else {
         completion(false, "URL invalide")
         return
     }
